@@ -1,4 +1,5 @@
 // frontend/js/auth.js
+const API_URL = 'https://fermer-6ta5.onrender.com/api';
 let currentUser = null;
 
 function showLoginModal() {
@@ -27,16 +28,20 @@ async function loginWithPhone(phone) {
     }
 
     try {
-        if (typeof loginUser === 'function') {
-            const result = await loginUser(phone); // Ensure this function is defined in api.js
-            if (result.success) {
-                currentUser = result.user;
-                localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                updateAuthUI();
-                closeLoginModal();
-                showToast('✅ Muvaffaqiyatli kirdingiz!');
-                return true;
-            }
+        const response = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            currentUser = result.user;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateAuthUI();
+            closeLoginModal();
+            showToast('✅ Muvaffaqiyatli kirdingiz!');
+            return true;
         }
     } catch (error) {
         console.error('Login xatolik:', error);
@@ -73,10 +78,10 @@ function updateAuthUI() {
     }
     
     if (currentUser && currentUser.phone) {
-        const phoneShort = currentUser.phone.slice(-9);
+        const displayName = currentUser.firstName || currentUser.phone.slice(-9);
         authSection.innerHTML = `
             <div style="display: flex; align-items: center; gap: 10px;">
-                <span style="color: white;">👋 ${phoneShort}</span>
+                <span style="color: white;">👋 ${displayName}</span>
                 <button onclick="logout()" style="background: #ffd700; color: #2d5a27; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer;">Chiqish</button>
             </div>
         `;

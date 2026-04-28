@@ -946,211 +946,173 @@
         </div>
     </div>
 
-    <script>
-        const API_URL = 'http://localhost:3000/api';
+   <script>
+    
+    const API_URL = 'https://fermer-6ta5.onrender.com/api';
+    
+    // ============ AUTH FUNKSIYALARI ============
+    function showAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
+    function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+    
+    function switchAuthTab(tab) {
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const tabs = document.querySelectorAll('.auth-tab');
         
-        // ============ AUTH FUNKSIYALARI ============
-        function showAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
-        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
-        
-        function switchAuthTab(tab) {
-            const loginForm = document.getElementById('loginForm');
-            const registerForm = document.getElementById('registerForm');
-            const tabs = document.querySelectorAll('.auth-tab');
-            
-            if (tab === 'login') {
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-                tabs[0].classList.add('active');
-                tabs[1].classList.remove('active');
-            } else {
-                loginForm.style.display = 'none';
-                registerForm.style.display = 'block';
-                tabs[0].classList.remove('active');
-                tabs[1].classList.add('active');
-            }
+        if (tab === 'login') {
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+            tabs[0].classList.add('active');
+            tabs[1].classList.remove('active');
+        } else {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+            tabs[0].classList.remove('active');
+            tabs[1].classList.add('active');
         }
+    }
+    
+    async function login() {
+        const phone = document.getElementById('loginPhone').value;
+        if (!phone) { showToast('Telefon raqam kiriting!', 'error'); return; }
         
-        async function login() {
-            const phone = document.getElementById('loginPhone').value;
-            if (!phone) { showToast('Telefon raqam kiriting!', 'error'); return; }
-            
-            try {
-                const response = await fetch(`${API_URL}/login`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ phone })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    localStorage.setItem('currentUser', JSON.stringify(result.user));
-                    closeAuthModal();
-                    updateAuthUI();
-                    showToast(`✅ Xush kelibsiz, ${result.user.firstName || result.user.phone}!`);
-                    setTimeout(() => location.reload(), 1500);
-                }
-            } catch(error) {
-                const demoUser = { id: Date.now(), firstName: 'Demo', lastName: 'User', phone: phone, role: 'user' };
-                localStorage.setItem('currentUser', JSON.stringify(demoUser));
+        try {
+            const response = await fetch(`${API_URL}/login`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone })
+            });
+            const result = await response.json();
+            if (result.success) {
+                localStorage.setItem('currentUser', JSON.stringify(result.user));
                 closeAuthModal();
                 updateAuthUI();
-                showToast('✅ Demo rejimda kirdingiz!');
+                showToast(`✅ Xush kelibsiz, ${result.user.firstName || result.user.phone}!`);
                 setTimeout(() => location.reload(), 1500);
             }
+        } catch(error) {
+            const demoUser = { id: Date.now(), firstName: 'Demo', lastName: 'User', phone: phone, role: 'user' };
+            localStorage.setItem('currentUser', JSON.stringify(demoUser));
+            closeAuthModal();
+            updateAuthUI();
+            showToast('✅ Demo rejimda kirdingiz!');
+            setTimeout(() => location.reload(), 1500);
+        }
+    }
+    
+    async function register() {
+        const firstName = document.getElementById('regFirstName').value;
+        const lastName = document.getElementById('regLastName').value;
+        const phone = document.getElementById('regPhone').value;
+        
+        if (!firstName || !lastName || !phone) {
+            showToast('Barcha maydonlarni to\'ldiring!', 'error');
+            return;
         }
         
-        async function register() {
-            const firstName = document.getElementById('regFirstName').value;
-            const lastName = document.getElementById('regLastName').value;
-            const phone = document.getElementById('regPhone').value;
+        try {
+            const response = await fetch(`${API_URL}/register`, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ firstName, lastName, phone })
+            });
+            const result = await response.json();
+            if (result.success) {
+                localStorage.setItem('currentUser', JSON.stringify(result.user));
+                closeAuthModal();
+                updateAuthUI();
+                showToast(`✅ Muvaffaqiyatli ro'yxatdan o'tdingiz, ${firstName}!`);
+                setTimeout(() => location.reload(), 1500);
+            } else {
+                showToast(result.error, 'error');
+            }
+        } catch(error) {
+            const newUser = { id: Date.now(), firstName, lastName, phone, role: 'user' };
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            closeAuthModal();
+            updateAuthUI();
+            showToast(`✅ Ro'yxatdan o'tdingiz, ${firstName}! (offline)`);
+            setTimeout(() => location.reload(), 1500);
+        }
+    }
+    
+    function logout() {
+        localStorage.removeItem('currentUser');
+        updateAuthUI();
+        showToast('👋 Siz chiqib ketdingiz');
+        setTimeout(() => location.reload(), 1000);
+    }
+    
+    function updateAuthUI() {
+        const authSection = document.getElementById('authSection');
+        const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (user.firstName) {
+            authSection.innerHTML = `<div style="display:flex; align-items:center; gap:10px;"><span style="color:white;">👋 ${user.firstName}</span><button onclick="logout()" style="background:#ffd700; color:#2d5a27; border:none; padding:5px 12px; border-radius:5px; cursor:pointer;">Chiqish</button></div>`;
+        } else {
+            authSection.innerHTML = '<button onclick="showAuthModal()" style="background:#ffd700; color:#2d5a27; border:none; padding:8px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">Kirish</button>';
+        }
+    }
+    
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        if (type === 'error') toast.style.background = '#f44336';
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+    
+    // ============ STATISTIKA ============
+    async function loadStats() {
+        try {
+            const response = await fetch(`${API_URL}/stats`);
+            const stats = await response.json();
+            document.getElementById('statUsers').textContent = stats.users || 0;
+            document.getElementById('statOrders').textContent = stats.orders || 0;
+            document.getElementById('statLands').textContent = stats.lands || 0;
+        } catch(e) { console.log('Stats load error'); }
+    }
+    
+    // ============ KONTAKT FORM ============
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('contactName').value;
+            const phone = document.getElementById('contactPhone').value;
+            const message = document.getElementById('contactMessage').value;
             
-            if (!firstName || !lastName || !phone) {
-                showToast('Barcha maydonlarni to\'ldiring!', 'error');
+            if (!name || !phone) {
+                showToast('Ism va telefon raqamni to\'ldiring!', 'error');
                 return;
             }
             
             try {
-                const response = await fetch(`${API_URL}/register`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ firstName, lastName, phone })
+                const response = await fetch(`${API_URL}/messages`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone, message })
                 });
                 const result = await response.json();
                 if (result.success) {
-                    localStorage.setItem('currentUser', JSON.stringify(result.user));
-                    closeAuthModal();
-                    updateAuthUI();
-                    showToast(`✅ Muvaffaqiyatli ro'yxatdan o'tdingiz, ${firstName}!`);
-                    setTimeout(() => location.reload(), 1500);
-                } else {
-                    showToast(result.error, 'error');
+                    showToast('✅ Xabaringiz yuborildi!');
+                    contactForm.reset();
                 }
             } catch(error) {
-                const newUser = { id: Date.now(), firstName, lastName, phone, role: 'user' };
-                localStorage.setItem('currentUser', JSON.stringify(newUser));
-                closeAuthModal();
-                updateAuthUI();
-                showToast(`✅ Ro'yxatdan o'tdingiz, ${firstName}! (offline)`);
-                setTimeout(() => location.reload(), 1500);
+                showToast('❌ Xatolik yuz berdi', 'error');
             }
-        }
-        
-        function logout() {
-            localStorage.removeItem('currentUser');
-            updateAuthUI();
-            showToast('👋 Siz chiqib ketdingiz');
-            setTimeout(() => location.reload(), 1000);
-        }
-        
-        function updateAuthUI() {
-            const authSection = document.getElementById('authSection');
-            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-            if (user.firstName) {
-                authSection.innerHTML = `<div style="display:flex; align-items:center; gap:10px;"><span style="color:white;">👋 ${user.firstName}</span><button onclick="logout()" style="background:#ffd700; color:#2d5a27; border:none; padding:5px 12px; border-radius:5px; cursor:pointer;">Chiqish</button></div>`;
-            } else {
-                authSection.innerHTML = '<button onclick="showAuthModal()" style="background:#ffd700; color:#2d5a27; border:none; padding:8px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">Kirish</button>';
-            }
-        }
-        
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            if (type === 'error') toast.style.background = '#f44336';
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-        
-        // ============ STATISTIKA ============
-        async function loadStats() {
-            try {
-                const response = await fetch(`${API_URL}/stats`);
-                const stats = await response.json();
-                document.getElementById('statUsers').textContent = stats.users || 0;
-                document.getElementById('statOrders').textContent = stats.orders || 0;
-                document.getElementById('statLands').textContent = stats.lands || 0;
-            } catch(e) { console.log('Stats load error'); }
-        }
-        
-        // ============ OMMABOP O'G'ITLAR ============
-        async function loadPopularFertilizers() {
-            try {
-                const response = await fetch(`${API_URL}/fertilizers`);
-                const fertilizers = await response.json();
-                const popular = fertilizers.slice(0, 3);
-                const container = document.getElementById('popularFertilizers');
-                
-                container.innerHTML = popular.map(fer => `
-                    <div class="fertilizer-item">
-                        <div class="fertilizer-img"><span>${fer.type === 'mineral' ? '⚗️' : '🍃'}</span></div>
-                        <div class="fertilizer-info">
-                            <h4>${fer.name}</h4>
-                            <p>${fer.description}</p>
-                            <div class="fertilizer-price">💰 ${fer.price.toLocaleString()} so'm/${fer.unit}</div>
-                            <button class="fertilizer-btn" onclick="window.location.href='pages/fertilizers.html'">🛒 Buyurtma qilish</button>
-                        </div>
-                    </div>
-                `).join('');
-            } catch(e) {
-                document.getElementById('popularFertilizers').innerHTML = `
-                    <div class="fertilizer-item"><div class="fertilizer-img"><span>⚗️</span></div><div class="fertilizer-info"><h4>Ammoniy selitrasi</h4><p>Azotli o'g'it</p><div class="fertilizer-price">💰 450,000 so'm/kg</div><button class="fertilizer-btn" onclick="window.location.href='pages/fertilizers.html'">🛒 Buyurtma qilish</button></div></div>
-                    <div class="fertilizer-item"><div class="fertilizer-img"><span>⚗️</span></div><div class="fertilizer-info"><h4>Superfosfat</h4><p>Fosforli o'g'it</p><div class="fertilizer-price">💰 380,000 so'm/kg</div><button class="fertilizer-btn" onclick="window.location.href='pages/fertilizers.html'">🛒 Buyurtma qilish</button></div></div>
-                    <div class="fertilizer-item"><div class="fertilizer-img"><span>🍃</span></div><div class="fertilizer-info"><h4>Organik gumus</h4><p>Tabiiy o'g'it</p><div class="fertilizer-price">💰 250,000 so'm/tonna</div><button class="fertilizer-btn" onclick="window.location.href='pages/fertilizers.html'">🛒 Buyurtma qilish</button></div></div>
-                `;
-            }
-        }
-        
-        // ============ KONTAKT FORM ============
-   // ============ KONTAKT FORM (yangilangan) ============
-document.getElementById('contactForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('contactName').value;
-    const phone = document.getElementById('contactPhone').value;
-    const message = document.getElementById('contactMessage').value;
-    
-    if (!name || !phone) {
-        showToast('Ism va telefon raqamni to\'ldiring!', 'error');
-        return;
+        });
     }
     
-    try {
-        const response = await fetch(`${API_URL}/messages`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, phone, message })
-        });
-        const result = await response.json();
-        
-        if (result.success) {
-            showToast('✅ Xabaringiz yuborildi! Tez orada siz bilan bog\'lanamiz.');
-            document.getElementById('contactForm').reset();
-        } else {
-            showToast('❌ Xatolik yuz berdi, qaytadan urinib ko\'ring', 'error');
-        }
-    } catch (error) {
-        // Offline rejim - localstorage ga saqlash
-        let messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
-        messages.push({ id: Date.now(), name, phone, message, date: new Date().toISOString() });
-        localStorage.setItem('contactMessages', JSON.stringify(messages));
-        showToast('✅ Xabaringiz saqlandi (offline rejim)');
-        document.getElementById('contactForm').reset();
+    // ============ SAHIFA YUKLANGANDA ============
+    document.addEventListener('DOMContentLoaded', () => {
+        updateAuthUI();
+        loadStats();
+    });
+    
+    window.onclick = function(event) {
+        const modal = document.getElementById('authModal');
+        if (event.target === modal) closeAuthModal();
     }
-});
-        
-        // ============ MODALNI YOPISH ============
-        window.onclick = function(event) {
-            const modal = document.getElementById('authModal');
-            if (event.target === modal) closeAuthModal();
-        }
-        
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') closeAuthModal();
-        });
-        
-        // ============ SAHIFA YUKLANGANDA ============
-        document.addEventListener('DOMContentLoaded', () => {
-            updateAuthUI();
-            loadStats();
-            loadPopularFertilizers();
-        });
-    </script>
+
+   </script>
 </body>
 </html>
