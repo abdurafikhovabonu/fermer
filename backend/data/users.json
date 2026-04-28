@@ -13,5 +13,14 @@
     "role": "user",
     "createdAt": "2026-04-14T15:56:29.764Z",
     "avatar": "https://ui-avatars.com/api/?name=Namozov+Mahmud&background=2d5a27&color=fff"
+  },
+  {
+    "id": 1777356701668,
+    "firstName": "Bexruzbek",
+    "lastName": "Barotov",
+    "phone": "998949802420",
+    "role": "user",
+    "createdAt": "2026-04-28T06:11:41.668Z",
+    "avatar": "https://ui-avatars.com/api/?name=Bexruzbek+Barotov&background=2d5a27&color=fff"
   }
 ]

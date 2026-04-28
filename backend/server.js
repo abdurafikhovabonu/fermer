@@ -334,6 +334,31 @@ app.get('/api/stats', (req, res) => {
         totalIncome: orders.reduce((sum, o) => sum + (o.total || 0), 0)
     });
 });
+// O'g'itni yangilash (PUT)
+app.put('/api/fertilizers/:id', (req, res) => {
+    const fertilizers = readData('fertilizers.json');
+    const index = fertilizers.findIndex(f => f.id == req.params.id);
+    if (index !== -1) {
+        fertilizers[index] = { ...fertilizers[index], ...req.body };
+        writeData('fertilizers.json', fertilizers);
+        res.json({ success: true, fertilizer: fertilizers[index] });
+    } else {
+        res.status(404).json({ error: 'O\'g\'it topilmadi' });
+    }
+});
+
+// Yerni yangilash (PUT)
+app.put('/api/lands/:id', (req, res) => {
+    const lands = readData('lands.json');
+    const index = lands.findIndex(l => l.id == req.params.id);
+    if (index !== -1) {
+        lands[index] = { ...lands[index], ...req.body };
+        writeData('lands.json', lands);
+        res.json({ success: true, land: lands[index] });
+    } else {
+        res.status(404).json({ error: 'Yer topilmadi' });
+    }
+});
 
 // ============ SERVERNI ISHGA TUSHIRISH ============
 app.listen(PORT, () => {

@@ -1,68 +1,5 @@
 [
   {
-    "id": 1775758981034,
-    "date": "2026-04-09T18:23:01.011Z",
-    "status": "confirmed",
-    "items": [
-      {
-        "id": 1,
-        "name": "Ammoniy selitrasi",
-        "type": "mineral",
-        "price": 450000,
-        "unit": "kg",
-        "description": "Azotli o'g'it, hosildorlikni 30% gacha oshiradi",
-        "quantity": 1
-      }
-    ],
-    "total": 450000,
-    "customerName": "Bonu Abdurafikhova",
-    "customerPhone": "90 912 26 20",
-    "deliveryAddress": "200 20 ",
-    "userId": 1775673110853
-  },
-  {
-    "id": 1775758983703,
-    "date": "2026-04-09T18:23:03.688Z",
-    "status": "confirmed",
-    "items": [
-      {
-        "id": 1,
-        "name": "Ammoniy selitrasi",
-        "type": "mineral",
-        "price": 450000,
-        "unit": "kg",
-        "description": "Azotli o'g'it, hosildorlikni 30% gacha oshiradi",
-        "quantity": 1
-      }
-    ],
-    "total": 450000,
-    "customerName": "Bonu Abdurafikhova",
-    "customerPhone": "90 912 26 20",
-    "deliveryAddress": "200 20 ",
-    "userId": 1775673110853
-  },
-  {
-    "id": 1775760543421,
-    "date": "2026-04-09T18:49:03.411Z",
-    "status": "shipped",
-    "items": [
-      {
-        "id": 1,
-        "name": "Ammoniy selitrasi",
-        "type": "mineral",
-        "price": 450000,
-        "unit": "kg",
-        "description": "Azotli o'g'it, hosildorlikni 30% gacha oshiradi",
-        "quantity": 10
-      }
-    ],
-    "total": 4500000,
-    "customerName": "Bonu Abdurafikhova",
-    "customerPhone": "90 912 26 20",
-    "deliveryAddress": "Buxoro shaharga kerak",
-    "userId": 1775760110480
-  },
-  {
     "id": 1776182326375,
     "orderNumber": "ORD-1776182326375",
     "date": "2026-04-14T15:58:46.369Z",
@@ -83,5 +20,27 @@
     "customerPhone": "123131233",
     "deliveryAddress": "Buxoro kogon",
     "userId": 1776182189764
+  },
+  {
+    "id": 1777356790419,
+    "orderNumber": "ORD-1777356790419",
+    "date": "2026-04-28T06:13:10.420Z",
+    "status": "pending",
+    "items": [
+      {
+        "id": 1,
+        "name": "Ammoniy selitrasi",
+        "type": "mineral",
+        "price": 450000,
+        "unit": "kg",
+        "description": "Azotli o'g'it, hosildorlikni 30% gacha oshiradi",
+        "quantity": 6
+      }
+    ],
+    "total": 2700000,
+    "customerName": "Bexruzbek",
+    "customerPhone": "998949802420",
+    "deliveryAddress": "Buxoro viloyati",
+    "userId": 1777356701668
   }
 ]

@@ -71,15 +71,56 @@
         .stat-card { background: white; border-radius: 15px; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
         .stat-info h3 { font-size: 1.8rem; color: #2d5a27; }
         .table-container { background: white; border-radius: 15px; padding: 1.5rem; overflow-x: auto; }
+        .table-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
         table { width: 100%; border-collapse: collapse; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #f5f5f5; }
+        th { background: #f5f5f5; position: sticky; top: 0; }
         .status-select { padding: 5px 10px; border-radius: 5px; border: 1px solid #ddd; cursor: pointer; }
+        .edit-btn { background: #ff9800; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right: 5px; }
         .delete-btn { background: #ff4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; }
-        .refresh-btn { background: #2d5a27; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; margin-left: 1rem; }
-        .unread-message { background: #fff3e0; font-weight: bold; }
+        .add-btn { background: #2d5a27; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+        .refresh-btn { background: #2196f3; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; }
+        .unread-message { background: #fff3e0; }
         .toast { position: fixed; bottom: 20px; right: 20px; background: #2d5a27; color: white; padding: 12px 24px; border-radius: 8px; z-index: 2000; animation: slideIn 0.3s ease; }
         @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+        .close { font-size: 1.5rem; cursor: pointer; color: #999; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+        .submit-btn { width: 100%; padding: 12px; background: #2d5a27; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; display: inline-block; }
+        .status-active { background: #4caf50; color: white; }
+        .status-sold { background: #9c27b0; color: white; }
+        .status-pending { background: #ff9800; color: white; }
+        .status-approved { background: #4caf50; color: white; }
+        .status-rejected { background: #f44336; color: white; }
+        
         @media (max-width: 768px) { .sidebar { width: 70px; } .sidebar .nav-text { display: none; } .main-content { margin-left: 70px; } }
     </style>
 </head>
@@ -163,32 +204,84 @@
                         <div class="table-container"><h3>📦 So'nggi buyurtmalar</h3><div id="recentOrders">Yuklanmoqda...</div></div>
                     </div>
                     <div id="usersSection" style="display:none;"><div class="table-container"><h2>👥 Foydalanuvchilar</h2><div id="usersList">Yuklanmoqda...</div></div></div>
-                    <div id="ordersSection" style="display:none;"><div class="table-container"><h2>📦 Buyurtmalar</h2><div id="ordersList">Yuklanmoqda...</div></div></div>
-                    <div id="landsSection" style="display:none;"><div class="table-container"><h2>🌾 Yer e'lonlari</h2><div id="landsList">Yuklanmoqda...</div></div></div>
-                    <div id="requestsSection" style="display:none;"><div class="table-container"><h2>📝 Yer zaproslari</h2><div id="requestsList">Yuklanmoqda...</div></div></div>
-                    <div id="fertilizersSection" style="display:none;"><div class="table-container"><h2>💊 O'g'itlar</h2><div id="fertilizersList">Yuklanmoqda...</div></div></div>
+                    <div id="ordersSection" style="display:none;">
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h2>📦 Buyurtmalar</h2>
+                                <button class="refresh-btn" onclick="loadOrders()">🔄 Yangilash</button>
+                            </div>
+                            <div style="overflow-x: auto;">
+                                <table id="ordersTable">
+                                    <thead>
+                                        <tr><th>#</th><th>Sana</th><th>Mijoz</th><th>Telefon</th><th>Mahsulotlar</th><th>Jami</th><th>Status</th><th>Amal</th></tr>
+                                    </thead>
+                                    <tbody id="ordersList">...</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="landsSection" style="display:none;">
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h2>🌾 Yer e'lonlari</h2>
+                                <button class="add-btn" onclick="showAddLandModal()">➕ Yangi yer qo'shish</button>
+                                <button class="refresh-btn" onclick="loadLands()">🔄 Yangilash</button>
+                            </div>
+                            <div style="overflow-x: auto;">
+                                <table id="landsTable">
+                                    <thead>
+                                        <tr><th>ID</th><th>Manzil</th><th>Maydon</th><th>Narx</th><th>Egasi</th><th>Holati</th><th>Amal</th></tr>
+                                    </thead>
+                                    <tbody id="landsList">...</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="requestsSection" style="display:none;">
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h2>📝 Yer zaproslari</h2>
+                                <button class="refresh-btn" onclick="loadRequests()">🔄 Yangilash</button>
+                            </div>
+                            <div style="overflow-x: auto;">
+                                <table id="requestsTable">
+                                    <thead>
+                                        <tr><th>#</th><th>Sana</th><th>Yer manzili</th><th>Fermer</th><th>Telefon</th><th>Izoh</th><th>Status</th><th>Amal</th></tr>
+                                    </thead>
+                                    <tbody id="requestsList">...</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="fertilizersSection" style="display:none;">
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h2>💊 O'g'itlar</h2>
+                                <button class="add-btn" onclick="showAddFertilizerModal()">➕ Yangi o'g'it qo'shish</button>
+                                <button class="refresh-btn" onclick="loadFertilizers()">🔄 Yangilash</button>
+                            </div>
+                            <div style="overflow-x: auto;">
+                                <table id="fertilizersTable">
+                                    <thead>
+                                        <tr><th>ID</th><th>Nomi</th><th>Turi</th><th>Narxi</th><th>Birligi</th><th>Miqdori</th><th>Holati</th><th>Amal</th></tr>
+                                    </thead>
+                                    <tbody id="fertilizersList">...</tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                     <div id="messagesSection" style="display:none;">
                         <div class="table-container">
-                            <div class="table-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+                            <div class="table-header">
                                 <h2>✉️ Bog'lanish xabarlari</h2>
                                 <button class="refresh-btn" onclick="loadMessages()">🔄 Yangilash</button>
                             </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Sana</th>
-                                        <th>Ism</th>
-                                        <th>Telefon</th>
-                                        <th>Xabar</th>
-                                        <th>Status</th>
-                                        <th>Amal</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="messagesList">
-                                    <tr><td colspan="7" style="text-align:center;">⏳ Yuklanmoqda...</td></tr>
-                                </tbody>
-                            </table>
+                            <div style="overflow-x: auto;">
+                                <table>
+                                    <thead><tr><th>#</th><th>Sana</th><th>Ism</th><th>Telefon</th><th>Xabar</th><th>Status</th><th>Amal</th></tr></thead>
+                                    <tbody id="messagesList">...</tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -196,9 +289,95 @@
         </div>
     </div>
 
+    <!-- Add/Edit Land Modal -->
+    <div id="landModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="landModalTitle">➕ Yangi yer qo'shish</h2>
+                <span class="close" onclick="closeLandModal()">&times;</span>
+            </div>
+            <form id="landForm">
+                <input type="hidden" id="landId" value="">
+                <div class="form-group"><label>📍 Viloyat</label><input type="text" id="landLocation" required></div>
+                <div class="form-group"><label>🏠 Aniq manzil</label><input type="text" id="landAddress" required></div>
+                <div class="form-group"><label>🌾 Maydon (gektar)</label><input type="number" id="landArea" step="0.1" required></div>
+                <div class="form-group"><label>💰 Narx (so'm/gektar)</label><input type="number" id="landPrice" required></div>
+                <div class="form-group"><label>📅 Muddati</label><input type="text" id="landDuration" placeholder="12 oy" required></div>
+                <div class="form-group"><label>👤 Egasi ismi</label><input type="text" id="landOwner" required></div>
+                <div class="form-group"><label>📞 Egasi telefoni</label><input type="tel" id="landOwnerPhone" required></div>
+                <div class="form-group"><label>📌 Holati</label>
+                    <select id="landStatus">
+                        <option value="active">Faol (ijaraga beriladi)</option>
+                        <option value="sold">Sotilgan / Ijaraga berilgan</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">✅ Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Fertilizer Modal -->
+    <div id="fertilizerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="fertilizerModalTitle">➕ Yangi o'g'it qo'shish</h2>
+                <span class="close" onclick="closeFertilizerModal()">&times;</span>
+            </div>
+            <form id="fertilizerForm">
+                <input type="hidden" id="fertilizerId" value="">
+                <div class="form-group"><label>📛 Nomi</label><input type="text" id="fertilizerName" required></div>
+                <div class="form-group"><label>🏷️ Turi</label>
+                    <select id="fertilizerType">
+                        <option value="mineral">🏭 Mineral</option>
+                        <option value="organic">🌱 Organik</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>💰 Narxi (so'm)</label><input type="number" id="fertilizerPrice" required></div>
+                <div class="form-group"><label>📦 Birligi</label><input type="text" id="fertilizerUnit" placeholder="kg, tonna, litr" required></div>
+                <div class="form-group"><label>📦 Mavjud miqdori</label><input type="number" id="fertilizerQuantity" placeholder="0" value="0" required></div>
+                <div class="form-group"><label>📝 Tavsifi</label><textarea id="fertilizerDesc" rows="2"></textarea></div>
+                <button type="submit" class="submit-btn">✅ Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Sell Fertilizer Modal -->
+    <div id="sellFertilizerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>💊 O'g'it sotish</h2>
+                <span class="close" onclick="closeSellFertilizerModal()">&times;</span>
+            </div>
+            <form id="sellFertilizerForm">
+                <input type="hidden" id="sellFertilizerId" value="">
+                <div class="form-group"><label>📛 O'g'it nomi</label><input type="text" id="sellFertilizerName" readonly style="background:#f5f5f5"></div>
+                <div class="form-group"><label>📦 Mavjud miqdor</label><input type="text" id="sellCurrentQuantity" readonly style="background:#f5f5f5"></div>
+                <div class="form-group"><label>📦 Sotiladigan miqdor</label><input type="number" id="sellQuantity" required min="1" step="1"></div>
+                <div class="form-group"><label>💰 Sotish narxi</label><input type="number" id="sellPrice" required></div>
+                <div class="form-group"><label>👤 Xaridor</label><input type="text" id="buyerName" required></div>
+                <div class="form-group"><label>📞 Telefon</label><input type="tel" id="buyerPhone" required></div>
+                <button type="submit" class="submit-btn">✅ Sotish</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-       // admin.html boshida
         const API_URL = 'https://fermer-6ta5.onrender.com/api';
+        
+        // Status o'zbekcha ko'rinishlari
+        const orderStatusMap = {
+            'pending': '⏳ Kutilmoqda',
+            'confirmed': '✅ Tasdiqlangan',
+            'shipped': '🚚 Yetkazilmoqda',
+            'delivered': '📦 Yetkazilgan',
+            'cancelled': '❌ Bekor qilingan'
+        };
+        
+        const requestStatusMap = {
+            'pending': '⏳ Kutilmoqda',
+            'approved': '✅ Tasdiqlangan',
+            'rejected': '❌ Rad etilgan'
+        };
         
         // ============ ADMIN LOGIN ============
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -269,7 +448,7 @@
                 const ordersRes = await fetch(`${API_URL}/orders`);
                 const orders = await ordersRes.json();
                 const recent = orders.slice(-5).reverse();
-                document.getElementById('recentOrders').innerHTML = recent.map(o => `<div style="padding:10px; border-bottom:1px solid #eee;"><strong>${o.orderNumber}</strong> - ${o.customerName} - ${(o.total||0).toLocaleString()} so'm - ${o.status}</div>`).join('');
+                document.getElementById('recentOrders').innerHTML = recent.map(o => `<div style="padding:10px; border-bottom:1px solid #eee;"><strong>${o.orderNumber}</strong> - ${o.customerName} - ${(o.total||0).toLocaleString()} so'm - ${orderStatusMap[o.status]||o.status}</div>`).join('');
             } catch(e) { console.log('Dashboard error'); }
         }
         
@@ -277,21 +456,45 @@
             try {
                 const res = await fetch(`${API_URL}/users`);
                 const users = await res.json();
-                document.getElementById('usersList').innerHTML = `<table><thead><tr><th>ID</th><th>Ism</th><th>Familiya</th><th>Telefon</th><th>Ro'yxatdan</th></tr></thead><tbody>${users.map(u => `<tr><td>${u.id}</td><td>${u.firstName||'-'}</td><td>${u.lastName||'-'}</td><td>${u.phone}</td><td>${new Date(u.createdAt).toLocaleDateString()}</td></tr>`).join('')}</tbody></table>`;
+                document.getElementById('usersList').innerHTML = `<table><thead><tr><th>ID</th><th>Ism</th><th>Familiya</th><th>Telefon</th><th>Ro'yxatdan</th><th>Roli</th></tr></thead><tbody>${users.map(u => `<tr><td>${u.id}</td><td>${u.firstName||'-'}</td><td>${u.lastName||'-'}</td><td>${u.phone}</td><td>${new Date(u.createdAt).toLocaleDateString()}</td><td>${u.role === 'admin' ? '👑 Admin' : '🌾 Fermer'}</td></tr>`).join('')}</tbody></table>`;
             } catch(e) { console.log('Users error'); }
         }
         
+        // ============ BUYURTMALAR (O'zbekcha status bilan) ============
         async function loadOrders() {
             try {
                 const res = await fetch(`${API_URL}/orders`);
                 const orders = await res.json();
-                document.getElementById('ordersList').innerHTML = `<table><thead><tr><th>#</th><th>Sana</th><th>Mijoz</th><th>Jami</th><th>Status</th><th>Amal</th></tr></thead><tbody>${orders.map(o => `<tr><td>${o.orderNumber}</td><td>${new Date(o.date).toLocaleDateString()}</td><td>${o.customerName}</td><td>${(o.total||0).toLocaleString()} so'm</td><td><select class="status-select" onchange="updateOrderStatus(${o.id}, this.value)"><option ${o.status==='pending'?'selected':''}>pending</option><option ${o.status==='confirmed'?'selected':''}>confirmed</option><option ${o.status==='shipped'?'selected':''}>shipped</option><option ${o.status==='delivered'?'selected':''}>delivered</option></select></td><td><button class="delete-btn" onclick="deleteOrder(${o.id})">🗑️</button></td></tr>`).join('')}</tbody></table>`;
+                document.getElementById('ordersList').innerHTML = orders.map(o => `
+                    <tr>
+                        <td>${o.orderNumber}</td>
+                        <td>${new Date(o.date).toLocaleString()}</td>
+                        <td>${o.customerName||'-'}</td>
+                        <td>${o.customerPhone||'-'}</td>
+                        <td>${o.items ? o.items.map(i => `${i.name} x${i.quantity}`).join(', ') : '-'}</td>
+                        <td>${(o.total||0).toLocaleString()} so'm</td>
+                        <td>
+                            <select class="status-select" onchange="updateOrderStatus(${o.id}, this.value)">
+                                <option value="pending" ${o.status==='pending' ? 'selected' : ''}>⏳ Kutilmoqda</option>
+                                <option value="confirmed" ${o.status==='confirmed' ? 'selected' : ''}>✅ Tasdiqlangan</option>
+                                <option value="shipped" ${o.status==='shipped' ? 'selected' : ''}>🚚 Yetkazilmoqda</option>
+                                <option value="delivered" ${o.status==='delivered' ? 'selected' : ''}>📦 Yetkazilgan</option>
+                                <option value="cancelled" ${o.status==='cancelled' ? 'selected' : ''}>❌ Bekor qilingan</option>
+                            </select>
+                        </td>
+                        <td><button class="delete-btn" onclick="deleteOrder(${o.id})">🗑️</button></td>
+                    </tr>
+                `).join('');
             } catch(e) { console.log('Orders error'); }
         }
         
         async function updateOrderStatus(id, status) {
             try {
-                await fetch(`${API_URL}/orders/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
+                await fetch(`${API_URL}/orders/${id}`, { 
+                    method: 'PUT', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ status }) 
+                });
                 showToast('✅ Status yangilandi');
                 loadOrders();
                 loadDashboard();
@@ -299,7 +502,7 @@
         }
         
         async function deleteOrder(id) {
-            if (!confirm('O\'chirmoqchimisiz?')) return;
+            if (!confirm('Buyurtmani o\'chirmoqchimisiz?')) return;
             try {
                 await fetch(`${API_URL}/orders/${id}`, { method: 'DELETE' });
                 showToast('✅ O\'chirildi');
@@ -308,32 +511,147 @@
             } catch(e) { showToast('❌ Xatolik', 'error'); }
         }
         
+        // ============ YER E'LONLARI (Holati bilan) ============
         async function loadLands() {
             try {
                 const res = await fetch(`${API_URL}/lands`);
                 const lands = await res.json();
-                document.getElementById('landsList').innerHTML = `<table><thead><tr><th>ID</th><th>Manzil</th><th>Maydon</th><th>Narx</th><th>Egasi</th></tr></thead><tbody>${lands.map(l => `<tr><td>${l.id}</td><td>${l.location}</td><td>${l.area} ga</td><td>${l.price_per_hectare.toLocaleString()} so'm</td><td>${l.owner}</td></tr>`).join('')}</tbody></table>`;
+                document.getElementById('landsList').innerHTML = lands.map(l => `
+                    <tr>
+                        <td>${l.id}</td>
+                        <td>${l.location}, ${l.address}}</td>
+                        <td>${l.area} ga</td>
+                        <td>${l.price_per_hectare.toLocaleString()} so'm</td>
+                        <td>${l.owner}</td>
+                        <td><span class="status-badge ${l.status === 'active' ? 'status-active' : 'status-sold'}">${l.status === 'active' ? '✅ Faol' : '🔴 Sotilgan'}</span></td>
+                        <td>
+                            <button class="edit-btn" onclick="editLand(${l.id})">✏️</button>
+                            <button class="delete-btn" onclick="deleteLand(${l.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `).join('');
             } catch(e) { console.log('Lands error'); }
         }
         
+        function showAddLandModal() {
+            document.getElementById('landModalTitle').innerText = '➕ Yangi yer qo\'shish';
+            document.getElementById('landForm').reset();
+            document.getElementById('landId').value = '';
+            document.getElementById('landStatus').value = 'active';
+            document.getElementById('landModal').style.display = 'flex';
+        }
+        
+        function closeLandModal() { document.getElementById('landModal').style.display = 'none'; }
+        
+        async function editLand(id) {
+            try {
+                const res = await fetch(`${API_URL}/lands`);
+                const lands = await res.json();
+                const land = lands.find(l => l.id === id);
+                if (land) {
+                    document.getElementById('landModalTitle').innerText = '✏️ Yerni tahrirlash';
+                    document.getElementById('landId').value = land.id;
+                    document.getElementById('landLocation').value = land.location;
+                    document.getElementById('landAddress').value = land.address;
+                    document.getElementById('landArea').value = land.area;
+                    document.getElementById('landPrice').value = land.price_per_hectare;
+                    document.getElementById('landDuration').value = land.duration;
+                    document.getElementById('landOwner').value = land.owner;
+                    document.getElementById('landOwnerPhone').value = land.owner_phone;
+                    document.getElementById('landStatus').value = land.status || 'active';
+                    document.getElementById('landModal').style.display = 'flex';
+                }
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
+        }
+        
+        async function deleteLand(id) {
+            if (!confirm('Yer e\'lonini o\'chirmoqchimisiz?')) return;
+            try {
+                await fetch(`${API_URL}/lands/${id}`, { method: 'DELETE' });
+                showToast('✅ O\'chirildi');
+                loadLands();
+                loadDashboard();
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
+        }
+        
+        document.getElementById('landForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('landId').value;
+            const landData = {
+                location: document.getElementById('landLocation').value,
+                address: document.getElementById('landAddress').value,
+                area: parseFloat(document.getElementById('landArea').value),
+                price_per_hectare: parseFloat(document.getElementById('landPrice').value),
+                duration: document.getElementById('landDuration').value,
+                owner: document.getElementById('landOwner').value,
+                owner_phone: document.getElementById('landOwnerPhone').value,
+                status: document.getElementById('landStatus').value,
+                soil_type: "O'rtacha",
+                water_source: "Kanal"
+            };
+            
+            try {
+                if (id) {
+                    await fetch(`${API_URL}/lands/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(landData)
+                    });
+                    showToast('✅ Yangilandi');
+                } else {
+                    await fetch(`${API_URL}/lands`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(landData)
+                    });
+                    showToast('✅ Qo\'shildi');
+                }
+                closeLandModal();
+                loadLands();
+                loadDashboard();
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
+        });
+        
+        // ============ YER ZAPROSLARI (O'zbekcha status) ============
         async function loadRequests() {
             try {
                 const res = await fetch(`${API_URL}/land-requests`);
                 const reqs = await res.json();
-                document.getElementById('requestsList').innerHTML = `<table><thead><tr><th>#</th><th>Sana</th><th>Yer</th><th>Fermer</th><th>Izoh</th><th>Status</th><th>Amal</th></tr></thead><tbody>${reqs.map(r => `<tr><td>${r.requestNumber}</td><td>${new Date(r.date).toLocaleDateString()}</td><td>${r.landLocation}</td><td>${r.farmerName}</td><td>${r.additionalInfo || '-'}</td><td><select class="status-select" onchange="updateRequestStatus(${r.id}, this.value)"><option ${r.status==='pending'?'selected':''}>pending</option><option ${r.status==='approved'?'selected':''}>approved</option><option ${r.status==='rejected'?'selected':''}>rejected</option></select></td><td><button class="delete-btn" onclick="deleteRequest(${r.id})">🗑️</button></td></tr>`).join('')}</tbody></table>`;
+                document.getElementById('requestsList').innerHTML = reqs.map(r => `
+                    <tr>
+                        <td>${r.requestNumber}</td>
+                        <td>${new Date(r.date).toLocaleString()}</td>
+                        <td>${r.landLocation}</td>
+                        <td>${r.farmerName||'-'}</td>
+                        <td>${r.farmerPhone||'-'}</td>
+                        <td style="max-width:200px; word-wrap:break-word;">${r.additionalInfo || '-'}</td>
+                        <td>                            <select class="status-select" onchange="updateRequestStatus(${r.id}, this.value)">
+                                <option value="pending" ${r.status==='pending' ? 'selected' : ''}>⏳ Kutilmoqda</option>
+                                <option value="approved" ${r.status==='approved' ? 'selected' : ''}>✅ Tasdiqlangan</option>
+                                <option value="rejected" ${r.status==='rejected' ? 'selected' : ''}>❌ Rad etilgan</option>
+                            </select>
+                        </td>
+                        <td><button class="delete-btn" onclick="deleteRequest(${r.id})">🗑️</button></td>
+                    </tr>
+                `).join('');
             } catch(e) { console.log('Requests error'); }
         }
         
         async function updateRequestStatus(id, status) {
             try {
-                await fetch(`${API_URL}/land-requests/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status }) });
+                await fetch(`${API_URL}/land-requests/${id}`, { 
+                    method: 'PUT', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ status }) 
+                });
                 showToast('✅ Status yangilandi');
                 loadRequests();
+                loadDashboard();
             } catch(e) { showToast('❌ Xatolik', 'error'); }
         }
         
         async function deleteRequest(id) {
-            if (!confirm('O\'chirmoqchimisiz?')) return;
+            if (!confirm('Zaprosni o\'chirmoqchimisiz?')) return;
             try {
                 await fetch(`${API_URL}/land-requests/${id}`, { method: 'DELETE' });
                 showToast('✅ O\'chirildi');
@@ -341,18 +659,168 @@
             } catch(e) { showToast('❌ Xatolik', 'error'); }
         }
         
+        // ============ O'G'ITLAR (Miqdor bilan) ============
         async function loadFertilizers() {
             try {
                 const res = await fetch(`${API_URL}/fertilizers`);
                 const fers = await res.json();
-                document.getElementById('fertilizersList').innerHTML = `<tr><thead><tr><th>ID</th><th>Nomi</th><th>Turi</th><th>Narxi</th><th>Birligi</th><th>Amal</th></tr></thead><tbody>${fers.map(f => `<tr><td>${f.id}</td><td>${f.name}</td><td>${f.type}</td><td>${f.price.toLocaleString()} so'm</td><td>${f.unit}</td><td><button class="delete-btn" onclick="deleteFertilizer(${f.id})">🗑️</button></td></tr>`).join('')}</tbody></table>`;
+                document.getElementById('fertilizersList').innerHTML = fers.map(f => `
+                    <tr>
+                        <td>${f.id}</td>
+                        <td>${f.name}</td>
+                        <td>${f.type === 'mineral' ? '🏭 Mineral' : '🌱 Organik'}</td>
+                        <td>${f.price.toLocaleString()} so'm</td>
+                        <td>${f.unit}</td>
+                        <td style="font-weight:bold; ${(f.quantity || 0) < 10 ? 'color:#f44336' : 'color:#4caf50'}">${f.quantity || 0} ${f.unit}</td>
+                        <td>
+                            <span class="status-badge ${(f.quantity || 0) > 0 ? 'status-active' : 'status-sold'}">${(f.quantity || 0) > 0 ? '✅ Mavjud' : '🔴 Tugagan'}</span>
+                        </td>
+                        <td>
+                            <button class="edit-btn" onclick="editFertilizer(${f.id})">✏️</button>
+                            <button class="edit-btn" onclick="showSellFertilizerModal(${f.id})" style="background:#ff9800">💸 Sotish</button>
+                            <button class="delete-btn" onclick="deleteFertilizer(${f.id})">🗑️</button>
+                        </td>
+                    </tr>
+                `).join('');
             } catch(e) { console.log('Fertilizers error'); }
         }
         
-        async function deleteFertilizer(id) {
-            if (!confirm('O\'chirmoqchimisiz?')) return;
-            showToast('⚠️ Bu funksiya tez orada qo\'shiladi');
+        function showAddFertilizerModal() {
+            document.getElementById('fertilizerModalTitle').innerText = '➕ Yangi o\'g\'it qo\'shish';
+            document.getElementById('fertilizerForm').reset();
+            document.getElementById('fertilizerId').value = '';
+            document.getElementById('fertilizerModal').style.display = 'flex';
         }
+        
+        function closeFertilizerModal() { document.getElementById('fertilizerModal').style.display = 'none'; }
+        
+        async function editFertilizer(id) {
+            try {
+                const res = await fetch(`${API_URL}/fertilizers`);
+                const fers = await res.json();
+                const fer = fers.find(f => f.id === id);
+                if (fer) {
+                    document.getElementById('fertilizerModalTitle').innerText = '✏️ O\'g\'itni tahrirlash';
+                    document.getElementById('fertilizerId').value = fer.id;
+                    document.getElementById('fertilizerName').value = fer.name;
+                    document.getElementById('fertilizerType').value = fer.type;
+                    document.getElementById('fertilizerPrice').value = fer.price;
+                    document.getElementById('fertilizerUnit').value = fer.unit;
+                    document.getElementById('fertilizerQuantity').value = fer.quantity || 0;
+                    document.getElementById('fertilizerDesc').value = fer.description || '';
+                    document.getElementById('fertilizerModal').style.display = 'flex';
+                }
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
+        }
+        
+        async function deleteFertilizer(id) {
+            if (!confirm('O\'g\'itni o\'chirmoqchimisiz?')) return;
+            try {
+                await fetch(`${API_URL}/fertilizers/${id}`, { method: 'DELETE' });
+                showToast('✅ O\'chirildi');
+                loadFertilizers();
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
+        }
+        
+        document.getElementById('fertilizerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('fertilizerId').value;
+            const fertilizerData = {
+                name: document.getElementById('fertilizerName').value,
+                type: document.getElementById('fertilizerType').value,
+                price: parseFloat(document.getElementById('fertilizerPrice').value),
+                unit: document.getElementById('fertilizerUnit').value,
+                quantity: parseInt(document.getElementById('fertilizerQuantity').value) || 0,
+                description: document.getElementById('fertilizerDesc').value
+            };
+            
+            try {
+                if (id) {
+                    await fetch(`${API_URL}/fertilizers/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(fertilizerData)
+                    });
+                    showToast('✅ Yangilandi');
+                } else {
+                    await fetch(`${API_URL}/fertilizers`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(fertilizerData)
+                    });
+                    showToast('✅ Qo\'shildi');
+                }
+                closeFertilizerModal();
+                loadFertilizers();
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
+        });
+        
+        // ============ O'G'IT SOTISH (Miqdorni kamaytirish) ============
+        async function showSellFertilizerModal(id) {
+            try {
+                const res = await fetch(`${API_URL}/fertilizers`);
+                const fers = await res.json();
+                const fer = fers.find(f => f.id === id);
+                if (fer) {
+                    document.getElementById('sellFertilizerId').value = fer.id;
+                    document.getElementById('sellFertilizerName').value = fer.name;
+                    document.getElementById('sellCurrentQuantity').value = `${fer.quantity || 0} ${fer.unit}`;
+                    document.getElementById('sellQuantity').value = '';
+                    document.getElementById('sellPrice').value = fer.price;
+                    document.getElementById('sellFertilizerModal').style.display = 'flex';
+                }
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
+        }
+        
+        function closeSellFertilizerModal() { document.getElementById('sellFertilizerModal').style.display = 'none'; }
+        
+        document.getElementById('sellFertilizerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = parseInt(document.getElementById('sellFertilizerId').value);
+            const sellQuantity = parseInt(document.getElementById('sellQuantity').value);
+            const sellPrice = parseFloat(document.getElementById('sellPrice').value);
+            const buyerName = document.getElementById('buyerName').value;
+            const buyerPhone = document.getElementById('buyerPhone').value;
+            
+            try {
+                const res = await fetch(`${API_URL}/fertilizers`);
+                const fers = await res.json();
+                const fer = fers.find(f => f.id === id);
+                
+                if (!fer) { showToast('❌ O\'g\'it topilmadi', 'error'); return; }
+                if (sellQuantity > (fer.quantity || 0)) { showToast('❌ Yetarli miqdor yo\'q!', 'error'); return; }
+                
+                const newQuantity = (fer.quantity || 0) - sellQuantity;
+                
+                await fetch(`${API_URL}/fertilizers/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...fer, quantity: newQuantity })
+                });
+                
+                // Sotuvni buyurtma sifatida qayd qilish
+                const orderData = {
+                    orderNumber: `SALE-${Date.now()}`,
+                    customerName: buyerName,
+                    customerPhone: buyerPhone,
+                    items: [{ name: fer.name, quantity: sellQuantity, price: sellPrice, unit: fer.unit }],
+                    total: sellPrice * sellQuantity,
+                    status: 'delivered',
+                    date: new Date().toISOString()
+                };
+                
+                await fetch(`${API_URL}/orders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+                
+                showToast(`✅ ${sellQuantity} ${fer.unit} sotildi!`);
+                closeSellFertilizerModal();
+                loadFertilizers();
+                loadDashboard();
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
+        });
         
         // ============ XABARLAR ============
         async function loadMessages() {
@@ -360,10 +828,7 @@
                 const response = await fetch(`${API_URL}/messages`);
                 const messages = await response.json();
                 displayMessages(messages);
-            } catch(e) {
-                const localMessages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
-                displayMessages(localMessages);
-            }
+            } catch(e) { console.log('Messages error'); }
         }
         
         function displayMessages(messages) {
@@ -376,7 +841,7 @@
             tbody.innerHTML = messages.map(msg => `
                 <tr class="${msg.status === 'unread' ? 'unread-message' : ''}">
                     <td>${msg.messageNumber || msg.id}</td>
-                    <td>${new Date(msg.createdAt || msg.date).toLocaleString()}</td>
+                    <td>${new Date(msg.createdAt).toLocaleString()}</td>
                     <td>${msg.name}</td>
                     <td>${msg.phone}</td>
                     <td style="max-width: 300px; word-wrap: break-word;">${msg.message || '-'}</td>
@@ -394,31 +859,23 @@
         
         async function updateMessageStatus(id, status) {
             try {
-                const response = await fetch(`${API_URL}/messages/${id}`, {
+                await fetch(`${API_URL}/messages/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status })
                 });
-                if (response.ok) {
-                    showToast('✅ Status yangilandi');
-                    loadMessages();
-                }
-            } catch(e) {
-                showToast('❌ Xatolik', 'error');
-            }
+                showToast('✅ Status yangilandi');
+                loadMessages();
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
         }
         
         async function deleteMessage(id) {
             if (!confirm('Xabarni o\'chirmoqchimisiz?')) return;
             try {
-                const response = await fetch(`${API_URL}/messages/${id}`, { method: 'DELETE' });
-                if (response.ok) {
-                    showToast('✅ Xabar o\'chirildi');
-                    loadMessages();
-                }
-            } catch(e) {
-                showToast('❌ Xatolik', 'error');
-            }
+                await fetch(`${API_URL}/messages/${id}`, { method: 'DELETE' });
+                showToast('✅ Xabar o\'chirildi');
+                loadMessages();
+            } catch(e) { showToast('❌ Xatolik', 'error'); }
         }
         
         function showToast(message, type = 'success') {
@@ -436,11 +893,20 @@
         window.deleteOrder = deleteOrder;
         window.updateRequestStatus = updateRequestStatus;
         window.deleteRequest = deleteRequest;
+        window.showAddLandModal = showAddLandModal;
+        window.editLand = editLand;
+        window.deleteLand = deleteLand;
+        window.showAddFertilizerModal = showAddFertilizerModal;
+        window.editFertilizer = editFertilizer;
         window.deleteFertilizer = deleteFertilizer;
+        window.showSellFertilizerModal = showSellFertilizerModal;
         window.updateMessageStatus = updateMessageStatus;
         window.deleteMessage = deleteMessage;
         window.loadMessages = loadMessages;
         window.adminLogout = adminLogout;
+        window.closeLandModal = closeLandModal;
+        window.closeFertilizerModal = closeFertilizerModal;
+        window.closeSellFertilizerModal = closeSellFertilizerModal;
     </script>
 </body>
 </html>
