@@ -1,5 +1,5 @@
 // frontend/js/api.js
-const API_URL = 'http://localhost:3000/api'; // Ensure this URL is correct and the backend is running
+const API_URL = 'https://fermer-production.up.railway.app/api'; // Ensure this URL is correct and the backend is running
 
 async function apiRequest(endpoint, method = 'GET', data = null) {
     const options = {

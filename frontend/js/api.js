@@ -1,5 +1,5 @@
 // frontend/js/api.js
-const API_URL = 'https://fermer-6ta5.onrender.com/api';
+const API_URL = 'https://fermer-production.up.railway.app/api';
 
 console.log('API URL:', API_URL);
 

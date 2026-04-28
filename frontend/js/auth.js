@@ -1,5 +1,5 @@
 // frontend/js/auth.js
-const API_URL = 'https://fermer-6ta5.onrender.com/api';
+const API_URL = 'https://fermer-production.up.railway.app/api';
 let currentUser = null;
 
 function showLoginModal() {
