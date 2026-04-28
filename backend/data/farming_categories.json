@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Dehqonchilik",
+    "icon": "🌾",
+    "description": "Don, sabzavot va mevalarni yetishtirish",
+    "guide": "Dehqonchilik bo'yicha to'liq qo'llanma...",
+    "business_plan": "Biznes reja namunasi..."
+  },
+  {
+    "id": 2,
+    "name": "Chorvachilik",
+    "icon": "🐄",
+    "description": "Qoramol, qo'y va echkichilik",
+    "guide": "Chorvachilik asoslari...",
+    "business_plan": "Chorvachilik biznes rejasi..."
+  },
+  {
+    "id": 3,
+    "name": "Bog'dorchilik",
+    "icon": "🍎",
+    "description": "Mevali daraxtlar va uzumchilik",
+    "guide": "Bog' tashkil etish...",
+    "business_plan": "Bog'dorchilik biznes rejasi..."
+  }
+]

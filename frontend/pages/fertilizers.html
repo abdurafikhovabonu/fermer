@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O'g'itlar | Fermerlar Maktabi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        .navbar {
+            background: #2d5a27;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffd700;
+        }
+
+        .auth-buttons button {
+            background: #ffd700;
+            color: #2d5a27;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            color: #2d5a27;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            border-left: 5px solid #ffd700;
+            padding-left: 1rem;
+        }
+
+        /* Filter tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 10px 24px;
+            background: white;
+            border: 2px solid #2d5a27;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .filter-tab:hover, .filter-tab.active {
+            background: #2d5a27;
+            color: white;
+        }
+
+        /* Fertilizers grid */
+        .fertilizers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .fertilizer-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .fertilizer-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .fertilizer-header {
+            background: linear-gradient(135deg, #2d5a27 0%, #1e3d1a 100%);
+            color: white;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .fertilizer-type {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ffd700;
+            color: #2d5a27;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .fertilizer-icon {
+            font-size: 2.5rem;
+        }
+
+        .fertilizer-name {
+            font-size: 1.3rem;
+            margin-top: 0.5rem;
+        }
+
+        .fertilizer-body {
+            padding: 1.5rem;
+        }
+
+        .fertilizer-description {
+            color: #666;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .fertilizer-details {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            padding: 0.5rem 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail {
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            color: #999;
+        }
+
+        .detail-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2d5a27;
+        }
+
+        .fertilizer-price {
+            font-size: 1.3rem;
+            color: #ff6b35;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .order-btn {
+            width: 100%;
+            padding: 12px;
+            background: #2d5a27;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .order-btn:hover {
+            background: #1e3d1a;
+        }
+
+        /* Cart sidebar */
+        .cart-sidebar {
+            position: fixed;
+            right: -380px;
+            top: 0;
+            width: 380px;
+            height: 100vh;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: right 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header {
+            background: #2d5a27;
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-header h3 {
+            margin: 0;
+        }
+
+        .close-cart {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+        }
+
+        .cart-item-price {
+            color: #ff6b35;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-remove {
+            background: #ff4444;
+            color: white;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .cart-total {
+            padding: 1rem;
+            border-top: 2px solid #eee;
+            background: #f9f9f9;
+        }
+
+        .cart-total p {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 12px;
+            background: #ffd700;
+            color: #2d5a27;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .cart-icon {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #2d5a27;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 99;
+        }
+
+        .cart-icon span {
+            background: #ffd700;
+            color: #2d5a27;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1100;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .loading, .no-data {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .fertilizers-grid {
+                grid-template-columns: 1fr;
+            }
+            .cart-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">🌾</span>
+                <span>Fermerlar Maktabi</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="../index.html">Bosh sahifa</a></li>
+                <li><a href="calculator.html">Hosildorlik kalkulyatori</a></li>
+                <li><a href="fertilizers.html" class="active">O'g'itlar</a></li>
+                <li><a href="land-rent.html">Yer ijarasi</a></li>
+                <li><a href="categories.html">Yo'nalishlar</a></li>
+                <li><a href="profile.html">Profil</a></li>
+            </ul>
+            <div class="auth-buttons" id="authSection">
+                <button onclick="showLoginModal()">Kirish</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <h1 class="page-title">💊 O'g'itlar katalogi</h1>
+        
+        <div class="filter-tabs" id="filterTabs">
+            <button class="filter-tab active" data-type="all">Barchasi</button>
+            <button class="filter-tab" data-type="mineral">Mineral</button>
+            <button class="filter-tab" data-type="organic">Organik</button>
+        </div>
+
+        <div id="fertilizersList" class="fertilizers-grid">
+            <div class="loading">⏳ Yuklanmoqda...</div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>🛒 Savatcha</h3>
+            <button class="close-cart" onclick="toggleCart()">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <p style="text-align: center; color: #999;">Savatcha bo'sh</p>
+        </div>
+        <div class="cart-total" id="cartTotal">
+            <p>Jami: <span id="totalAmount">0</span> so'm</p>
+            <button class="checkout-btn" onclick="checkout()">Buyurtma berish</button>
+        </div>
+    </div>
+
+    <div class="cart-icon" onclick="toggleCart()">
+        🛒
+        <span id="cartCount">0</span>
+    </div>
+
+    <!-- Order Modal -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeOrderModal()">&times;</span>
+            <h2>📦 Buyurtma berish</h2>
+            <form id="orderForm">
+                <div class="form-group">
+                    <label>👤 Ismingiz</label>
+                    <input type="text" id="orderName" required>
+                </div>
+                <div class="form-group">
+                    <label>📞 Telefon</label>
+                    <input type="tel" id="orderPhone" required>
+                </div>
+                <div class="form-group">
+                    <label>📍 Yetkazib berish manzili</label>
+                    <textarea id="orderAddress" rows="2" required></textarea>
+                </div>
+                <button type="submit" class="order-btn">✅ Buyurtma qilish</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h3>Kirish</h3>
+            <input type="tel" id="phoneInput" placeholder="Telefon raqam (+998...)" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:5px;">
+            <button onclick="login()" style="width:100%; padding:10px; background:#2d5a27; color:white; border:none; border-radius:5px; cursor:pointer;">Kirish</button>
+        </div>
+    </div>
+
+    <script>
+        // ============ API KONFIG ============
+        const API_URL = 'http://localhost:3000/api';
+        
+        let allFertilizers = [];
+        let currentFilter = 'all';
+        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+
+        // ============ API FUNKSIYALARI ============
+        async function getFertilizers() {
+            try {
+                const response = await fetch(`${API_URL}/fertilizers`);
+                if (!response.ok) throw new Error('Network error');
+                return await response.json();
+            } catch (error) {
+                console.log('Using demo data');
+                return getDemoFertilizers();
+            }
+        }
+
+        async function placeOrder(orderData) {
+            try {
+                const response = await fetch(`${API_URL}/orders`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+                return await response.json();
+            } catch (error) {
+                console.log('Offline order saved');
+                let orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                orders.push({ ...orderData, id: Date.now(), date: new Date().toISOString() });
+                localStorage.setItem('orders', JSON.stringify(orders));
+                return { success: true };
+            }
+        }
+
+        function getDemoFertilizers() {
+            return [
+                { id: 1, name: "Ammoniy selitrasi", type: "mineral", price: 450000, unit: "kg", description: "Azotli o'g'it, hosildorlikni 30% gacha oshiradi" },
+                { id: 2, name: "Superfosfat", type: "mineral", price: 380000, unit: "kg", description: "Fosforli o'g'it, ildiz tizimini kuchaytiradi" },
+                { id: 3, name: "Organik gumus", type: "organic", price: 250000, unit: "tonna", description: "Tabiiy o'g'it, tuproq unumdorligini tiklaydi" },
+                { id: 4, name: "Kaliy tuzi", type: "mineral", price: 420000, unit: "kg", description: "Kaliyli o'g'it, meva sifatini oshiradi" },
+                { id: 5, name: "BIO kompost", type: "organic", price: 180000, unit: "tonna", description: "Ekologik toza kompost" },
+                { id: 6, name: "Azofoska", type: "mineral", price: 520000, unit: "kg", description: "Kompleks o'g'it, NPK 16:16:16" }
+            ];
+        }
+
+        // ============ UI FUNKSIYALARI ============
+        async function loadFertilizers() {
+            const container = document.getElementById('fertilizersList');
+            container.innerHTML = '<div class="loading">⏳ Yuklanmoqda...</div>';
+            
+            allFertilizers = await getFertilizers();
+            filterFertilizers();
+        }
+
+        function filterFertilizers() {
+            let filtered = allFertilizers;
+            if (currentFilter !== 'all') {
+                filtered = allFertilizers.filter(f => f.type === currentFilter);
+            }
+            displayFertilizers(filtered);
+        }
+
+        function displayFertilizers(fertilizers) {
+            const container = document.getElementById('fertilizersList');
+            
+            if (fertilizers.length === 0) {
+                container.innerHTML = '<div class="no-data">😔 O\'g\'itlar topilmadi</div>';
+                return;
+            }
+            
+            container.innerHTML = fertilizers.map(fer => `
+                <div class="fertilizer-card">
+                    <div class="fertilizer-header">
+                        <span class="fertilizer-type">${fer.type === 'mineral' ? '🏭 Mineral' : '🌱 Organik'}</span>
+                        <div class="fertilizer-icon">${fer.type === 'mineral' ? '⚗️' : '🍃'}</div>
+                        <div class="fertilizer-name">${fer.name}</div>
+                    </div>
+                    <div class="fertilizer-body">
+                        <div class="fertilizer-description">${fer.description}</div>
+                        <div class="fertilizer-details">
+                            <div class="detail">
+                                <div class="detail-label">Narxi</div>
+                                <div class="detail-value">${fer.price.toLocaleString()} so'm</div>
+                            </div>
+                            <div class="detail">
+                                <div class="detail-label">Birligi</div>
+                                <div class="detail-value">${fer.unit}</div>
+                            </div>
+                        </div>
+                        <div class="fertilizer-price">💰 ${fer.price.toLocaleString()} so'm/${fer.unit}</div>
+                        <button class="order-btn" onclick="addToCart(${fer.id})">🛒 Savatga qo'shish</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ============ SAVATCHA ============
+        function addToCart(id) {
+            const fertilizer = allFertilizers.find(f => f.id === id);
+            const existing = cart.find(item => item.id === id);
+            
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ ...fertilizer, quantity: 1 });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+            showToast(`${fertilizer.name} savatga qo'shildi`);
+        }
+
+        function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const cartItems = document.getElementById('cartItems');
+            const cartCount = document.getElementById('cartCount');
+            const totalAmount = document.getElementById('totalAmount');
+            
+            cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p style="text-align: center; color: #999;">Savatcha bo\'sh</p>';
+                totalAmount.textContent = '0';
+                return;
+            }
+            
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <div class="cart-item-name">${item.name}</div>
+                        <div class="cart-item-price">${item.price.toLocaleString()} so'm</div>
+                        <small>Miqdor: ${item.quantity} ${item.unit}</small>
+                    </div>
+                    <button class="cart-item-remove" onclick="removeFromCart(${item.id})">✕</button>
+                </div>
+            `).join('');
+            
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            totalAmount.textContent = total.toLocaleString();
+        }
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+        }
+
+        // ============ BUYURTMA ============
+        function checkout() {
+            if (cart.length === 0) {
+                showToast('Savatcha bo\'sh');
+                return;
+            }
+            document.getElementById('orderModal').style.display = 'flex';
+        }
+
+        async function submitOrder(event) {
+            event.preventDefault();
+            
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            const orderData = {
+                items: cart,
+                total: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                customerName: document.getElementById('orderName').value,
+                customerPhone: document.getElementById('orderPhone').value,
+                deliveryAddress: document.getElementById('orderAddress').value,
+                userId: user.id || null,
+                date: new Date().toISOString()
+            };
+            
+            const result = await placeOrder(orderData);
+            if (result.success) {
+                showToast('✅ Buyurtma qabul qilindi!');
+                cart = [];
+                localStorage.setItem('cart', '[]');
+                updateCartUI();
+                closeOrderModal();
+                toggleCart();
+            }
+        }
+
+        // ============ AUTH ============
+        function showLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+        function closeOrderModal() { document.getElementById('orderModal').style.display = 'none'; }
+
+        async function login() {
+            const phone = document.getElementById('phoneInput').value;
+            if (!phone) { alert('Telefon raqam kiriting'); return; }
+            
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    localStorage.setItem('currentUser', JSON.stringify(result.user));
+                    closeLoginModal();
+                    updateAuthUI();
+                    showToast('✅ Muvaffaqiyatli kirdingiz!');
+                }
+            } catch (error) {
+                localStorage.setItem('currentUser', JSON.stringify({ id: Date.now(), phone }));
+                closeLoginModal();
+                updateAuthUI();
+                showToast('✅ Kirdingiz (offline)');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+            showToast('👋 Chiqib ketdingiz');
+        }
+
+        function updateAuthUI() {
+            const authSection = document.getElementById('authSection');
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            if (user.phone) {
+                authSection.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="color: white;">👋 ${user.phone.slice(-9)}</span>
+                        <button onclick="logout()" style="background:#ffd700; color:#2d5a27; border:none; padding:5px 12px; border-radius:5px; cursor:pointer;">Chiqish</button>
+                    </div>
+                `;
+            } else {
+                authSection.innerHTML = '<button onclick="showLoginModal()" style="background:#ffd700; color:#2d5a27; border:none; padding:8px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">Kirish</button>';
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `position:fixed; bottom:20px; right:20px; background:#2d5a27; color:white; padding:12px 24px; border-radius:8px; z-index:9999;`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ============ FILTER ============
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentFilter = tab.dataset.type;
+                filterFertilizers();
+            });
+        });
+
+        // ============ INIT ============
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFertilizers();
+            updateCartUI();
+            updateAuthUI();
+            document.getElementById('orderForm').addEventListener('submit', submitOrder);
+        });
+    </script>
+</body>
+</html>

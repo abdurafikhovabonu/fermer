@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fermerlar Maktabi | Bilim va resurslar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #2d5a27;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffd700;
+        }
+
+        .auth-buttons button {
+            background: #ffd700;
+            color: #2d5a27;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #3a7d34 0%, #2d5a27 100%);
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "🌾";
+            position: absolute;
+            font-size: 300px;
+            opacity: 0.05;
+            bottom: -50px;
+            right: -50px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #ffd700;
+            color: #2d5a27;
+        }
+
+        .btn-primary:hover {
+            background: #ffed4a;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #2d5a27;
+            transform: translateY(-2px);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background: #f5f5f5;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: #2d5a27;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title p {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #333;
+            display: block;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #2d5a27;
+            margin-bottom: 1rem;
+        }
+
+        /* Advantages Section */
+        .advantages {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+        }
+
+        .advantage-item {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .advantage-icon {
+            font-size: 2.5rem;
+            background: #e8f5e9;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .advantage-item h4 {
+            color: #2d5a27;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Popular Fertilizers */
+        .popular-fertilizers {
+            padding: 5rem 0;
+            background: #f5f5f5;
+        }
+
+        .fertilizers-slider {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .fertilizer-item {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .fertilizer-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .fertilizer-img {
+            background: linear-gradient(135deg, #2d5a27 0%, #1e3d1a 100%);
+            padding: 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .fertilizer-img span {
+            font-size: 3rem;
+        }
+
+        .fertilizer-info {
+            padding: 1.5rem;
+        }
+
+        .fertilizer-info h4 {
+            color: #2d5a27;
+            margin-bottom: 0.5rem;
+        }
+
+        .fertilizer-price {
+            color: #ff6b35;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        .fertilizer-btn {
+            background: #2d5a27;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+
+        /* News Section */
+        .news {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .news-card {
+            background: #f9f9f9;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .news-date {
+            background: #2d5a27;
+            color: white;
+            padding: 0.5rem 1rem;
+            display: inline-block;
+            border-radius: 0 0 10px 0;
+        }
+
+        .news-content {
+            padding: 1.5rem;
+        }
+
+        .news-content h4 {
+            color: #2d5a27;
+            margin-bottom: 0.5rem;
+        }
+
+        .read-more {
+            color: #ffd700;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+
+        /* Testimonials Section */
+        .testimonials {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .testimonial-avatar {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-name {
+            font-weight: bold;
+            color: #2d5a27;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+            background: #e8f5e9;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contact-form {
+            background: #f5f5f5;
+            padding: 2rem;
+            border-radius: 15px;
+        }
+
+        .contact-form input, .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .contact-form button {
+            background: #2d5a27;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        /* Stats Section */
+        .stats {
+            background: #2d5a27;
+            color: white;
+            padding: 4rem 0;
+        }
+
+        .stats .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #1a3a15;
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-col h4 {
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        .footer-col ul {
+            list-style: none;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-col ul li a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-col ul li a:hover {
+            color: #ffd700;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            padding: 2rem;
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .auth-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #666;
+        }
+
+        .auth-tab.active {
+            color: #2d5a27;
+            border-bottom: 2px solid #2d5a27;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #2d5a27;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">🌾</span>
+                <span>Fermerlar Maktabi</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Bosh sahifa</a></li>
+                <li><a href="pages/calculator.html">Hosildorlik kalkulyatori</a></li>
+                <li><a href="pages/fertilizers.html">O'g'itlar</a></li>
+                <li><a href="pages/land-rent.html">Yer ijarasi</a></li>
+                <li><a href="pages/categories.html">Yo'nalishlar</a></li>
+                <li><a href="pages/profile.html">Profil</a></li>
+                
+            </ul>
+            <div class="auth-buttons" id="authSection">
+                <button onclick="showAuthModal()">Kirish</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>🌾 Fermerlarga zamonaviy yechimlar</h1>
+            <p>Hosildorlikni oshiring, o'g'itlar buyurtma qiling, yerni ijaraga oling</p>
+            <div class="hero-buttons">
+                <a href="pages/fertilizers.html" class="btn btn-primary">🚜 O'g'it buyurtma qilish</a>
+                <a href="pages/land-rent.html" class="btn btn-secondary">📍 Yer ijarasi zaprosi</a>
+                <a href="pages/calculator.html" class="btn btn-secondary">📊 Hosilni hisoblash</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>📋 Bizning xizmatlar</h2>
+                <p>Fermerlar uchun eng kerakli xizmatlar bir joyda</p>
+            </div>
+            <div class="features-grid">
+                <a href="pages/calculator.html" class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Hosildorlik kalkulyatori</h3>
+                    <p>Tuproq tahlili va hosil prognozi, eng to'g'ri hisob-kitoblar</p>
+                </a>
+                <a href="pages/fertilizers.html" class="feature-card">
+                    <div class="feature-icon">💊</div>
+                    <h3>O'g'itlar katalogi</h3>
+                    <p>Mineral va organik o'g'itlar, eng arzon narxlar</p>
+                </a>
+                <a href="pages/land-rent.html" class="feature-card">
+                    <div class="feature-icon">🏞️</div>
+                    <h3>Yer ijarasi</h3>
+                    <p>Ijara e'lonlari, xaritada qidirish, zapros qoldirish</p>
+                </a>
+                <a href="pages/categories.html" class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Fermerlik yo'nalishlari</h3>
+                    <p>6+ yo'nalish bo'yicha qo'llanmalar va biznes rejalar</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advantages Section -->
+    <section class="advantages">
+        <div class="container">
+            <div class="section-title">
+                <h2>✨ Bizning afzalliklarimiz</h2>
+                <p>Nima uchun aynan Fermerlar Maktabi?</p>
+            </div>
+            <div class="advantages-grid">
+                <div class="advantage-item">
+                    <div class="advantage-icon">✅</div>
+                    <h4>Ishonchlilik</h4>
+                    <p>Faqat isbotlangan va sifatli mahsulotlar</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">🚀</div>
+                    <h4>Tezkor yetkazib berish</h4>
+                    <p>24 soat ichida yetkazib berish xizmati</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">💰</div>
+                    <h4>Eng past narxlar</h4>
+                    <p>To'g'ridan-to'g'ri ishlab chiqaruvchilardan</p>
+                </div>
+                <div class="advantage-item">
+                    <div class="advantage-icon">🎓</div>
+                    <h4>Bepul maslahat</h4>
+                    <p>Agronomlardan bepul konsultatsiya</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Fertilizers Section -->
+    <section class="popular-fertilizers">
+        <div class="container">
+            <div class="section-title">
+                <h2>💊 Eng ko'p tanlangan o'g'itlar</h2>
+                <p>Fermerlar tomonidan eng ko'p sotib olinadigan mahsulotlar</p>
+            </div>
+            <div class="fertilizers-slider" id="popularFertilizers">
+                <div class="loading">⏳ Yuklanmoqda...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="news">
+        <div class="container">
+            <div class="section-title">
+                <h2>📰 Fermerlar uchun yangiliklar</h2>
+                <p>So'nggi yangiliklar va e'lonlar</p>
+            </div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-date">15 Dekabr 2024</div>
+                    <div class="news-content">
+                        <h4>🌱 Yangi subsidiyalar joriy etildi</h4>
+                        <p>Fermer xo'jaliklari uchun davlat tomonidan 50% gacha subsidiyalar ajratiladi...</p>
+                        <a href="#" class="read-more">Batafsil →</a>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-date">10 Dekabr 2024</div>
+                    <div class="news-content">
+                        <h4>🚜 Traktorlar uchun imtiyozli kreditlar</h4>
+                        <p>Yangi qishloq xo'jaligi texnikalari uchun yillik 5% li kreditlar...</p>
+                        <a href="#" class="read-more">Batafsil →</a>
+                    </div>
+                </div>
+                <div class="news-card">
+                    <div class="news-date">5 Dekabr 2024</div>
+                    <div class="news-content">
+                        <h4>💧 Suv tejovchi texnologiyalar seminari</h4>
+                        <p>20-dekabr kuni Toshkentda bepul seminar bo'lib o'tadi...</p>
+                        <a href="#" class="read-more">Batafsil →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>⭐ Fermerlar sharhlari</h2>
+                <p>Bizning mijozlarimiz nima deyishadi</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">👨‍🌾</div>
+                    <p class="testimonial-text">"Fermerlar Maktabi orqali 5 gektar yerni ijaraga oldim. Hosildorlik 40% ga oshdi!"</p>
+                    <p class="testimonial-name">Alisher Rahimov</p>
+                    <small>Toshkent viloyati</small>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">👩‍🌾</div>
+                    <p class="testimonial-text">"O'g'itlarni juda tez yetkazib berishdi. Sifatli mahsulot, narxi ham qulay."</p>
+                    <p class="testimonial-name">Gulnora Karimova</p>
+                    <small>Samarqand</small>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-avatar">👨‍🌾</div>
+                    <p class="testimonial-text">"Kalkulyator juda foydali, qancha hosil bo'lishini oldindan bilish mumkin."</p>
+                    <p class="testimonial-name">Bobur Normatov</p>
+                    <small>Farg'ona</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>📞 Maslahat olish</h2>
+                <p>Savollaringiz bormi? Biz bilan bog'lanishingiz mumkin</p>
+            </div>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div>Toshkent sh., Chilonzor tumani, 12-uy</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">📞</div>
+                        <div>+998 71 123 45 67</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">✉️</div>
+                        <div>info@fermerlarmaktabi.uz</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">🕐</div>
+                        <div>Dushanba - Shanba: 09:00 - 18:00</div>
+                    </div>
+                </div>
+                <form class="contact-form" id="contactForm">
+                    <h3>Tezkor maslahat olish</h3>
+                    <input type="text" placeholder="Ismingiz" id="contactName" required>
+                    <input type="tel" placeholder="Telefon raqamingiz" id="contactPhone" required>
+                    <textarea rows="3" placeholder="Savolingizni yozing..." id="contactMessage"></textarea>
+                    <button type="submit">📨 Yuborish</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stat-card">
+                <h3 id="statUsers">0</h3>
+                <p>Faol foydalanuvchilar</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="statOrders">0</h3>
+                <p>Muvaffaqiyatli buyurtmalar</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="statLands">0</h3>
+                <p>Ijara uchun yerlar</p>
+            </div>
+            <div class="stat-card">
+                <h3>30%+</h3>
+                <p>Hosildorlik oshishi</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>🌾 Fermerlar Maktabi</h4>
+                    <p>Fermerlarga zamonaviy yechimlar va bilimlar platformasi</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Tez havolalar</h4>
+                    <ul>
+                        <li><a href="index.html">Bosh sahifa</a></li>
+                        <li><a href="pages/fertilizers.html">O'g'itlar</a></li>
+                        <li><a href="pages/land-rent.html">Yer ijarasi</a></li>
+                        <li><a href="pages/categories.html">Yo'nalishlar</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Yordam</h4>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Yetkazib berish</a></li>
+                        <li><a href="#">To'lov usullari</a></li>
+                        <li><a href="#">Maxfiylik siyosati</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Biz ijtimoiy tarmoqlarda</h4>
+                    <ul>
+                        <li><a href="#">📘 Telegram</a></li>
+                        <li><a href="#">📸 Instagram</a></li>
+                        <li><a href="#">📱 Facebook</a></li>
+                        <li><a href="#">🎵 TikTok</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Fermerlar Maktabi. Barcha huquqlar himoyalangan.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login/Register Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">Kirish</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">Ro'yxatdan o'tish</button>
+            </div>
+            <div id="loginForm">
+                <div class="form-group">
+                    <label>📞 Telefon raqam</label>
+                    <input type="tel" id="loginPhone" placeholder="+998 xx xxx xx xx" required>
+                </div>
+                <button onclick="login()" class="btn btn-primary" style="width:100%;">Kirish</button>
+            </div>
+            <div id="registerForm" style="display:none;">
+                <div class="form-group">
+                    <label>👤 Ism</label>
+                    <input type="text" id="regFirstName" placeholder="Ismingiz" required>
+                </div>
+                <div class="form-group">
+                    <label>👥 Familiya</label>
+                    <input type="text" id="regLastName" placeholder="Familiyangiz" required>
+                </div>
+                <div class="form-group">
+                    <label>📞 Telefon raqam</label>
+                    <input type="tel" id="regPhone" placeholder="+998 xx xxx xx xx" required>
+                </div>
+                <button onclick="register()" class="btn btn-primary" style="width:100%;">Ro'yxatdan o'tish</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        
+        // ============ AUTH FUNKSIYALARI ============
+        function showAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
+        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+        
+        function switchAuthTab(tab) {
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const tabs = document.querySelectorAll('.auth-tab');
+            
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+        
+        async function login() {
+            const phone = document.getElementById('loginPhone').value;
+            if (!phone) { showToast('Telefon raqam kiriting!', 'error'); return; }
+            
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    localStorage.setItem('currentUser', JSON.stringify(result.user));
+                    closeAuthModal();
+                    updateAuthUI();
+                    showToast(`✅ Xush kelibsiz, ${result.user.firstName || result.user.phone}!`);
+                    setTimeout(() => location.reload(), 1500);
+                }
+            } catch(error) {
+                const demoUser = { id: Date.now(), firstName: 'Demo', lastName: 'User', phone: phone, role: 'user' };
+                localStorage.setItem('currentUser', JSON.stringify(demoUser));
+                closeAuthModal();
+                updateAuthUI();
+                showToast('✅ Demo rejimda kirdingiz!');
+                setTimeout(() => location.reload(), 1500);
+            }
+        }
+        
+        async function register() {
+            const firstName = document.getElementById('regFirstName').value;
+            const lastName = document.getElementById('regLastName').value;
+            const phone = document.getElementById('regPhone').value;
+            
+            if (!firstName || !lastName || !phone) {
+                showToast('Barcha maydonlarni to\'ldiring!', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ firstName, lastName, phone })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    localStorage.setItem('currentUser', JSON.stringify(result.user));
+                    closeAuthModal();
+                    updateAuthUI();
+                    showToast(`✅ Muvaffaqiyatli ro'yxatdan o'tdingiz, ${firstName}!`);
+                    setTimeout(() => location.reload(), 1500);
+                } else {
+                    showToast(result.error, 'error');
+                }
+            } catch(error) {
+                const newUser = { id: Date.now(), firstName, lastName, phone, role: 'user' };
+                localStorage.setItem('currentUser', JSON.stringify(newUser));
+                closeAuthModal();
+                updateAuthUI();
+                showToast(`✅ Ro'yxatdan o'tdingiz, ${firstName}! (offline)`);
+                setTimeout(() => location.reload(), 1500);
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+            showToast('👋 Siz chiqib ketdingiz');
+            setTimeout(() => location.reload(), 1000);
+        }
+        
+        function updateAuthUI() {
+            const authSection = document.getElementById('authSection');
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (user.firstName) {
+                authSection.innerHTML = `<div style="display:flex; align-items:center; gap:10px;"><span style="color:white;">👋 ${user.firstName}</span><button onclick="logout()" style="background:#ffd700; color:#2d5a27; border:none; padding:5px 12px; border-radius:5px; cursor:pointer;">Chiqish</button></div>`;
+            } else {
+                authSection.innerHTML = '<button onclick="showAuthModal()" style="background:#ffd700; color:#2d5a27; border:none; padding:8px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">Kirish</button>';
+            }
+        }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            if (type === 'error') toast.style.background = '#f44336';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // ============ STATISTIKA ============
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/stats`);
+                const stats = await response.json();
+                document.getElementById('statUsers').textContent = stats.users || 0;
+                document.getElementById('statOrders').textContent = stats.orders || 0;
+                document.getElementById('statLands').textContent = stats.lands || 0;
+            } catch(e) { console.log('Stats load error'); }
+        }
+        
+        // ============ OMMABOP O'G'ITLAR ============
+        async function loadPopularFertilizers() {
+            try {
+                const response = await fetch(`${API_URL}/fertilizers`);
+                const fertilizers = await response.json();
+                const popular = fertilizers.slice(0, 3);
+                const container = document.getElementById('popularFertilizers');
+                
+                container.innerHTML = popular.map(fer => `
+                    <div class="fertilizer-item">
+                        <div class="fertilizer-img"><span>${fer.type === 'mineral' ? '⚗️' : '🍃'}</span></div>
+                        <div class="fertilizer-info">
+                            <h4>${fer.name}</h4>
+                            <p>${fer.description}</p>
+                            <div class="fertilizer-price">💰 ${fer.price.toLocaleString()} so'm/${fer.unit}</div>
+                            <button class="fertilizer-btn" onclick="window.location.href='pages/fertilizers.html'">🛒 Buyurtma qilish</button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch(e) {
+                document.getElementById('popularFertilizers').innerHTML = `
+                    <div class="fertilizer-item"><div class="fertilizer-img"><span>⚗️</span></div><div class="fertilizer-info"><h4>Ammoniy selitrasi</h4><p>Azotli o'g'it</p><div class="fertilizer-price">💰 450,000 so'm/kg</div><button class="fertilizer-btn" onclick="window.location.href='pages/fertilizers.html'">🛒 Buyurtma qilish</button></div></div>
+                    <div class="fertilizer-item"><div class="fertilizer-img"><span>⚗️</span></div><div class="fertilizer-info"><h4>Superfosfat</h4><p>Fosforli o'g'it</p><div class="fertilizer-price">💰 380,000 so'm/kg</div><button class="fertilizer-btn" onclick="window.location.href='pages/fertilizers.html'">🛒 Buyurtma qilish</button></div></div>
+                    <div class="fertilizer-item"><div class="fertilizer-img"><span>🍃</span></div><div class="fertilizer-info"><h4>Organik gumus</h4><p>Tabiiy o'g'it</p><div class="fertilizer-price">💰 250,000 so'm/tonna</div><button class="fertilizer-btn" onclick="window.location.href='pages/fertilizers.html'">🛒 Buyurtma qilish</button></div></div>
+                `;
+            }
+        }
+        
+        // ============ KONTAKT FORM ============
+   // ============ KONTAKT FORM (yangilangan) ============
+document.getElementById('contactForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('contactName').value;
+    const phone = document.getElementById('contactPhone').value;
+    const message = document.getElementById('contactMessage').value;
+    
+    if (!name || !phone) {
+        showToast('Ism va telefon raqamni to\'ldiring!', 'error');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/messages`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, phone, message })
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+            showToast('✅ Xabaringiz yuborildi! Tez orada siz bilan bog\'lanamiz.');
+            document.getElementById('contactForm').reset();
+        } else {
+            showToast('❌ Xatolik yuz berdi, qaytadan urinib ko\'ring', 'error');
+        }
+    } catch (error) {
+        // Offline rejim - localstorage ga saqlash
+        let messages = JSON.parse(localStorage.getItem('contactMessages') || '[]');
+        messages.push({ id: Date.now(), name, phone, message, date: new Date().toISOString() });
+        localStorage.setItem('contactMessages', JSON.stringify(messages));
+        showToast('✅ Xabaringiz saqlandi (offline rejim)');
+        document.getElementById('contactForm').reset();
+    }
+});
+        
+        // ============ MODALNI YOPISH ============
+        window.onclick = function(event) {
+            const modal = document.getElementById('authModal');
+            if (event.target === modal) closeAuthModal();
+        }
+        
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') closeAuthModal();
+        });
+        
+        // ============ SAHIFA YUKLANGANDA ============
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAuthUI();
+            loadStats();
+            loadPopularFertilizers();
+        });
+    </script>
+</body>
+</html>

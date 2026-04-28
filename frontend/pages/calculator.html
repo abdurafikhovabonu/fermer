@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hosildorlik kalkulyatori | Fermerlar Maktabi</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; }
+        
+        .navbar {
+            background: #2d5a27;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .logo-icon { margin-right: 10px; }
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+        .nav-links a { color: white; text-decoration: none; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: #ffd700; }
+        .auth-buttons button {
+            background: #ffd700;
+            color: #2d5a27;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .page-title {
+            color: #2d5a27;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            border-left: 5px solid #ffd700;
+            padding-left: 1rem;
+        }
+        
+        .calculator-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .calculate-btn {
+            width: 100%;
+            padding: 14px;
+            background: #2d5a27;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .calculate-btn:hover {
+            background: #1e3d1a;
+        }
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #e8f5e9;
+            border-radius: 10px;
+            display: none;
+        }
+        .result h3 {
+            color: #2d5a27;
+            margin-bottom: 1rem;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #c8e6c9;
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        .result-label {
+            font-weight: 500;
+        }
+        .result-value {
+            font-weight: bold;
+            color: #2d5a27;
+        }
+        .high { color: #4caf50; }
+        .medium { color: #ff9800; }
+        .low { color: #f44336; }
+        
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .main-container { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo"><span class="logo-icon">🌾</span><span>Fermerlar Maktabi</span></div>
+            <ul class="nav-links">
+                <li><a href="../index.html">Bosh sahifa</a></li>
+                <li><a href="calculator.html" class="active">Hosildorlik kalkulyatori</a></li>
+                <li><a href="fertilizers.html">O'g'itlar</a></li>
+                <li><a href="land-rent.html">Yer ijarasi</a></li>
+                <li><a href="categories.html">Yo'nalishlar</a></li>
+                <li><a href="profile.html">Profil</a></li>
+            </ul>
+            <div class="auth-buttons" id="authSection"><button onclick="showLoginModal()">Kirish</button></div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <h1 class="page-title">📊 Hosildorlik kalkulyatori</h1>
+        
+        <div class="calculator-card">
+            <div class="form-group">
+                <label>🌾 Ekin turi</label>
+                <select id="cropType">
+                    <option value="paxta">Paxta</option>
+                    <option value="bugdoy">Bug'doy</option>
+                    <option value="sholi">Sholi</option>
+                    <option value="kartoshka">Kartoshka</option>
+                    <option value="sabzi">Sabzi</option>
+                    <option value="pomidor">Pomidor</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>📏 Maydon (gektar)</label>
+                <input type="number" id="area" placeholder="Masalan: 5" value="1">
+            </div>
+            <div class="form-group">
+                <label>💧 Suv ta'minoti</label>
+                <select id="waterSupply">
+                    <option value="good">Yaxshi</option>
+                    <option value="medium">O'rtacha</option>
+                    <option value="low">Yomon</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>🌱 Tuproq sifati</label>
+                <select id="soilQuality">
+                    <option value="good">Unumdor</option>
+                    <option value="medium">O'rtacha</option>
+                    <option value="low">Unumsiz</option>
+                </select>
+            </div>
+            <button class="calculate-btn" onclick="calculateYield()">Hisoblash</button>
+            
+            <div id="result" class="result">
+                <h3>📈 Hosildorlik prognozi</h3>
+                <div class="result-item">
+                    <span class="result-label">Kutilayotgan hosil:</span>
+                    <span class="result-value" id="expectedYield">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Sifat darajasi:</span>
+                    <span class="result-value" id="qualityLevel">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Tavsiya etilgan o'g'it:</span>
+                    <span class="result-value" id="recommendedFertilizer">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Potensial daromad:</span>
+                    <span class="result-value" id="potentialIncome">-</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; z-index:1000;">
+        <div style="background:white; border-radius:20px; width:90%; max-width:400px; padding:2rem;">
+            <span onclick="closeLoginModal()" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
+            <h3>Kirish</h3>
+            <input type="tel" id="phoneInput" placeholder="Telefon raqam (+998...)" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:5px;">
+            <button onclick="login()" style="width:100%; padding:10px; background:#2d5a27; color:white; border:none; border-radius:5px; cursor:pointer;">Kirish</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api';
+        
+        const cropData = {
+            paxta: { baseYield: 35, price: 8000, unit: 'tsentner' },
+            bugdoy: { baseYield: 55, price: 3500, unit: 'tsentner' },
+            sholi: { baseYield: 60, price: 4000, unit: 'tsentner' },
+            kartoshka: { baseYield: 250, price: 5000, unit: 'kg' },
+            sabzi: { baseYield: 300, price: 3000, unit: 'kg' },
+            pomidor: { baseYield: 400, price: 6000, unit: 'kg' }
+        };
+        
+        function calculateYield() {
+            const crop = document.getElementById('cropType').value;
+            const area = parseFloat(document.getElementById('area').value);
+            const water = document.getElementById('waterSupply').value;
+            const soil = document.getElementById('soilQuality').value;
+            
+            let multiplier = 1;
+            if (water === 'good') multiplier += 0.3;
+            if (water === 'medium') multiplier += 0.1;
+            if (water === 'low') multiplier -= 0.3;
+            
+            if (soil === 'good') multiplier += 0.4;
+            if (soil === 'medium') multiplier += 0.1;
+            if (soil === 'low') multiplier -= 0.4;
+            
+            const baseYield = cropData[crop].baseYield;
+            const expectedYield = (baseYield * multiplier * area).toFixed(1);
+            const price = cropData[crop].price;
+            const income = (expectedYield * price).toLocaleString();
+            
+            let quality = '';
+            let qualityClass = '';
+            let fertilizer = '';
+            
+            if (multiplier >= 1.5) {
+                quality = 'Yuqori';
+                qualityClass = 'high';
+                fertilizer = 'Azofoska (kompleks o\'g\'it)';
+            } else if (multiplier >= 1.0) {
+                quality = 'O\'rtacha';
+                qualityClass = 'medium';
+                fertilizer = 'Ammoniy selitrasi + Superfosfat';
+            } else {
+                quality = 'Past';
+                qualityClass = 'low';
+                fertilizer = 'Organik gumus + Mineral o\'g\'itlar';
+            }
+            
+            document.getElementById('expectedYield').innerHTML = `${expectedYield} ${cropData[crop].unit}`;
+            document.getElementById('qualityLevel').innerHTML = `<span class="${qualityClass}">${quality}</span>`;
+            document.getElementById('recommendedFertilizer').innerHTML = fertilizer;
+            document.getElementById('potentialIncome').innerHTML = `${income} so'm`;
+            document.getElementById('result').style.display = 'block';
+        }
+        
+        // Auth functions
+        function showLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+        
+        async function login() {
+            const phone = document.getElementById('phoneInput').value;
+            if (!phone) { alert('Telefon raqam kiriting'); return; }
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    localStorage.setItem('currentUser', JSON.stringify(result.user));
+                    closeLoginModal();
+                    updateAuthUI();
+                }
+            } catch(error) {
+                localStorage.setItem('currentUser', JSON.stringify({ id: Date.now(), phone }));
+                closeLoginModal();
+                updateAuthUI();
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+        }
+        
+        function updateAuthUI() {
+            const authSection = document.getElementById('authSection');
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            if (user.phone) {
+                authSection.innerHTML = `<div style="display:flex; align-items:center; gap:10px;"><span style="color:white;">👋 ${user.phone.slice(-9)}</span><button onclick="logout()" style="background:#ffd700; color:#2d5a27; border:none; padding:5px 12px; border-radius:5px; cursor:pointer;">Chiqish</button></div>`;
+            } else {
+                authSection.innerHTML = '<button onclick="showLoginModal()" style="background:#ffd700; color:#2d5a27; border:none; padding:8px 20px; border-radius:5px; cursor:pointer; font-weight:bold;">Kirish</button>';
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', updateAuthUI);
+    </script>
+</body>
+</html>

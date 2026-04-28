@@ -1,0 +1,53 @@
+[
+  {
+    "id": 1775673015536,
+    "requestNumber": "REQ-1775673015536",
+    "date": "2026-04-08T18:30:15.536Z",
+    "status": "approved",
+    "landId": 1,
+    "landLocation": "Toshkent viloyati",
+    "landAddress": "Quyi Chirchiq tumani, O'rtasaroy MFY",
+    "landArea": 5.5,
+    "landOwner": "Alisher R.",
+    "landOwnerPhone": "+998901234567",
+    "price_per_hectare": 1200000,
+    "farmerName": "Bonu Abdurafikhova",
+    "farmerPhone": "+99890919262629",
+    "farmerId": null,
+    "additionalInfo": "sadsdad"
+  },
+  {
+    "id": 1775760774058,
+    "requestNumber": "REQ-1775760774058",
+    "date": "2026-04-09T18:52:54.058Z",
+    "status": "approved",
+    "landId": 4,
+    "landLocation": "Buxoro",
+    "landAddress": "Kogon tumani, Xumdon MFY",
+    "landArea": 20,
+    "landOwner": "Rustam K.",
+    "landOwnerPhone": "+998905556677",
+    "price_per_hectare": 800000,
+    "farmerName": "Bonu Abdurafikhova",
+    "farmerPhone": "+99890919262629",
+    "farmerId": 1775760110480,
+    "additionalInfo": "28asdasdads"
+  },
+  {
+    "id": 1776182386197,
+    "requestNumber": "REQ-1776182386197",
+    "date": "2026-04-14T15:59:46.197Z",
+    "status": "rejected",
+    "landId": 6,
+    "landLocation": "Andijon",
+    "landAddress": "Andijon tumani, Guliston MFY",
+    "landArea": 6,
+    "landOwner": "Sardor A.",
+    "landOwnerPhone": "+998907778899",
+    "price_per_hectare": 1300000,
+    "farmerName": "Namozov",
+    "farmerPhone": "90912313123",
+    "farmerId": 1776182189764,
+    "additionalInfo": "yerni olmoqchiman"
+  }
+]

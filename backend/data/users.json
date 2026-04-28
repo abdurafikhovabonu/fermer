@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1775673110853,
+    "phone": "909122929",
+    "role": "farmer",
+    "createdAt": "2026-04-08T18:31:50.853Z"
+  },
+  {
+    "id": 1776182189764,
+    "firstName": "Namozov",
+    "lastName": "Mahmud",
+    "phone": "991234567",
+    "role": "user",
+    "createdAt": "2026-04-14T15:56:29.764Z",
+    "avatar": "https://ui-avatars.com/api/?name=Namozov+Mahmud&background=2d5a27&color=fff"
+  }
+]

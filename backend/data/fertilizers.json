@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Ammoniy selitrasi",
+    "type": "mineral",
+    "price": 450000,
+    "unit": "kg",
+    "description": "Azotli o'g'it, hosildorlikni 30% gacha oshiradi"
+  },
+  {
+    "id": 2,
+    "name": "Superfosfat",
+    "type": "mineral",
+    "price": 380000,
+    "unit": "kg",
+    "description": "Fosforli o'g'it, ildiz tizimini kuchaytiradi"
+  },
+  {
+    "id": 3,
+    "name": "Organik gumus",
+    "type": "organic",
+    "price": 250000,
+    "unit": "tonna",
+    "description": "Tabiiy o'g'it, tuproq unumdorligini tiklaydi"
+  }
+]

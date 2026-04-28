@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1775762936352,
+    "messageNumber": "MSG-1775762936352",
+    "name": "bexruz",
+    "phone": "90912333",
+    "message": "salom yaxshimi",
+    "status": "read",
+    "createdAt": "2026-04-09T19:28:56.352Z",
+    "ip": "::1"
+  },
+  {
+    "id": 1776182245536,
+    "messageNumber": "MSG-1776182245536",
+    "name": "Mahmud",
+    "phone": "9012312313",
+    "message": "50 gektar yer kerak",
+    "status": "replied",
+    "createdAt": "2026-04-14T15:57:25.536Z",
+    "ip": "::1"
+  }
+]

@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yer ijarasi | Fermerlar Maktabi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #2d5a27;
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .logo-icon {
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffd700;
+        }
+
+        .auth-buttons button {
+            background: #ffd700;
+            color: #2d5a27;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* Main Container */
+        .land-rent-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            color: #2d5a27;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            border-left: 5px solid #ffd700;
+            padding-left: 1rem;
+        }
+
+        /* Filter */
+        .filter-section {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filter-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .region-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .region-btn {
+            padding: 8px 20px;
+            border: 2px solid #2d5a27;
+            background: white;
+            color: #2d5a27;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .region-btn:hover, .region-btn.active {
+            background: #2d5a27;
+            color: white;
+        }
+
+        /* Lands Grid */
+        .lands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2rem;
+        }
+
+        .land-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .land-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .land-card.selected {
+            border: 3px solid #ffd700;
+        }
+
+        .land-image {
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .land-icon {
+            font-size: 4rem;
+        }
+
+        .land-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #ffd700;
+            color: #2d5a27;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .land-info {
+            padding: 1.5rem;
+        }
+
+        .land-location {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2d5a27;
+            margin-bottom: 0.5rem;
+        }
+
+        .land-address {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .land-details {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            padding: 0.5rem 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-item {
+            text-align: center;
+        }
+
+        .detail-label {
+            font-size: 0.7rem;
+            color: #999;
+        }
+
+        .detail-value {
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .land-price {
+            font-size: 1.2rem;
+            color: #ff6b35;
+            font-weight: bold;
+            margin-top: 0.5rem;
+        }
+
+        .select-hint {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: #999;
+            text-align: center;
+        }
+
+        .loading, .no-lands, .error {
+            text-align: center;
+            padding: 3rem;
+            font-size: 1.2rem;
+        }
+
+        .error {
+            color: red;
+            background: #ffe0e0;
+            border-radius: 10px;
+        }
+
+        .refresh-btn {
+            background: #2d5a27;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        /* Modal */
+        .request-modal, .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .request-modal-content, .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .close-modal, .close {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        .submit-request {
+            width: 100%;
+            padding: 12px;
+            background: #2d5a27;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .selected-land-info {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            .lands-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">🌾</span>
+              <a href="../index.html" style="text-decoration: none;color: #eee;">  <span>Fermerlar Maktabi</span></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="../index.html">Bosh sahifa</a></li>
+                <li><a href="calculator.html">Hosildorlik kalkulyatori</a></li>
+                <li><a href="fertilizers.html">O'g'itlar</a></li>
+                <li><a href="land-rent.html" class="active">Yer ijarasi</a></li>
+                <li><a href="categories.html">Yo'nalishlar</a></li>
+                <li><a href="profile.html">Profil</a></li>
+            </ul>
+            <div class="auth-buttons" id="authSection">
+                <button onclick="showLoginModal()">Kirish</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="land-rent-container">
+        <h1 class="page-title">🌍 Yer ijarasi</h1>
+        
+        <div class="filter-section">
+            <div class="filter-title">📍 Viloyatlar bo'yicha filter:</div>
+            <div class="region-buttons" id="regionButtons">
+                <button class="region-btn active" data-region="all">Barchasi</button>
+            </div>
+        </div>
+
+        <div id="landsList" class="lands-grid">
+            <div class="loading">⏳ Yerlar yuklanmoqda...</div>
+        </div>
+    </div>
+
+    <!-- Zapros modal -->
+    <div id="requestModal" class="request-modal">
+        <div class="request-modal-content">
+            <span class="close-modal" onclick="closeRequestModal()">&times;</span>
+            <h2 class="modal-title">📝 Yerga zapros berish</h2>
+            <div id="selectedLandInfo" class="selected-land-info"></div>
+            <form id="landRequestForm">
+                <div class="form-group">
+                    <label>👤 To'liq ismingiz</label>
+                    <input type="text" id="fullName" placeholder="Ism familiyangiz" required>
+                </div>
+                <div class="form-group">
+                    <label>📞 Telefon raqam</label>
+                    <input type="tel" id="phoneNumber" placeholder="+998 xx xxx xx xx" required>
+                </div>
+                <div class="form-group">
+                    <label>📝 Qo'shimcha ma'lumot</label>
+                    <textarea id="additionalInfo" placeholder="Nima ekmoqchisiz? Qancha muddatga?"></textarea>
+                </div>
+                <button type="submit" class="submit-request">✅ Zapros yuborish</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Login modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h3>Kirish</h3>
+            <input type="tel" id="phoneInput" placeholder="Telefon raqam (+998...)" class="modal-input" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ddd; border-radius:5px;">
+            <button onclick="login()" class="btn btn-primary" style="width:100%; padding:10px; background:#2d5a27; color:white; border:none; border-radius:5px; cursor:pointer;">Kirish</button>
+        </div>
+    </div>
+
+    <script>
+        // ============ API KONFIGURATSIYA ============
+        const API_URL = 'http://localhost:3000/api';
+        
+        // ============ API FUNKSIYALARI ============
+        async function getLands() {
+            try {
+                console.log('Fetching lands from:', `${API_URL}/lands`);
+                const response = await fetch(`${API_URL}/lands`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Lands loaded:', data);
+                return data;
+            } catch (error) {
+                console.error('API error:', error);
+                // Demo ma'lumotlarni qaytarish
+                return getDemoLands();
+            }
+        }
+
+        async function sendLandRequest(requestData) {
+            try {
+                const response = await fetch(`${API_URL}/land-requests`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestData)
+                });
+                if (!response.ok) throw new Error('Network error');
+                return await response.json();
+            } catch (error) {
+                console.error('Send request error:', error);
+                // Offline rejim - localstorage saqlash
+                let requests = JSON.parse(localStorage.getItem('landRequests') || '[]');
+                requests.push({ ...requestData, id: Date.now(), date: new Date().toISOString() });
+                localStorage.setItem('landRequests', JSON.stringify(requests));
+                return { success: true, offline: true };
+            }
+        }
+
+        async function loginUser(phone) {
+            try {
+                const response = await fetch(`${API_URL}/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                if (!response.ok) throw new Error('Login failed');
+                return await response.json();
+            } catch (error) {
+                console.error('Login error:', error);
+                return { success: true, user: { id: Date.now(), phone, role: 'farmer' } };
+            }
+        }
+
+        // Demo ma'lumotlar
+        function getDemoLands() {
+            return [
+                {
+                    id: 1,
+                    location: "Toshkent viloyati",
+                    address: "Quyi Chirchiq tumani, O'rtasaroy MFY",
+                    area: 5.5,
+                    price_per_hectare: 1200000,
+                    duration: "12 oy",
+                    owner: "Alisher R.",
+                    owner_phone: "+998901234567",
+                    soil_type: "O'rtacha unumdor",
+                    water_source: "Nasos stansiyasi"
+                },
+                {
+                    id: 2,
+                    location: "Samarqand",
+                    address: "Jomboy tumani, Bog'bon mahallasi",
+                    area: 12,
+                    price_per_hectare: 950000,
+                    duration: "24 oy",
+                    owner: "Bobur N.",
+                    owner_phone: "+998998887766",
+                    soil_type: "Unumdor",
+                    water_source: "Kanal"
+                },
+                {
+                    id: 3,
+                    location: "Farg'ona",
+                    address: "Quva tumani, Navbahor MFY",
+                    area: 8,
+                    price_per_hectare: 1100000,
+                    duration: "36 oy",
+                    owner: "Dilshod M.",
+                    owner_phone: "+998933334455",
+                    soil_type: "Yumshoq",
+                    water_source: "Bulok"
+                },
+                {
+                    id: 4,
+                    location: "Buxoro",
+                    address: "Kogon tumani, Xumdon MFY",
+                    area: 20,
+                    price_per_hectare: 800000,
+                    duration: "60 oy",
+                    owner: "Rustam K.",
+                    owner_phone: "+998905556677",
+                    soil_type: "Qumloq",
+                    water_source: "Amudaryo"
+                },
+                {
+                    id: 5,
+                    location: "Qashqadaryo",
+                    address: "Qarshi tumani, Xonobod MFY",
+                    area: 15,
+                    price_per_hectare: 750000,
+                    duration: "48 oy",
+                    owner: "Jamshid T.",
+                    owner_phone: "+998915554433",
+                    soil_type: "O'rtacha",
+                    water_source: "Kanal"
+                }
+            ];
+        }
+
+        // ============ AUTH FUNKSIYALARI ============
+        let currentUser = null;
+
+        function showLoginModal() {
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        async function login() {
+            const phone = document.getElementById('phoneInput').value;
+            if (!phone) {
+                alert('Telefon raqam kiriting');
+                return;
+            }
+            
+            const result = await loginUser(phone);
+            if (result.success) {
+                currentUser = result.user;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                closeLoginModal();
+                updateAuthUI();
+                showToast('✅ Muvaffaqiyatli kirdingiz!');
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('currentUser');
+            updateAuthUI();
+            showToast('👋 Chiqib ketdingiz');
+        }
+
+        function updateAuthUI() {
+            const authSection = document.getElementById('authSection');
+            const savedUser = localStorage.getItem('currentUser');
+            
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                const phoneShort = currentUser.phone.slice(-9);
+                authSection.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="color: white;">👋 ${phoneShort}</span>
+                        <button onclick="logout()" style="background: #ffd700; color: #2d5a27; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer;">Chiqish</button>
+                    </div>
+                `;
+            } else {
+                authSection.innerHTML = '<button onclick="showLoginModal()" style="background: #ffd700; color: #2d5a27; border: none; padding: 8px 20px; border-radius: 5px; cursor: pointer; font-weight: bold;">Kirish</button>';
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: #2d5a27;
+                color: white;
+                padding: 12px 24px;
+                border-radius: 8px;
+                z-index: 9999;
+                animation: slideInRight 0.3s ease;
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // ============ LAND RENT FUNKSIYALARI ============
+        let allLands = [];
+        let currentFilter = 'all';
+        let selectedLand = null;
+        let regions = [];
+
+        function extractRegions(lands) {
+            const regionSet = new Set(lands.map(land => land.location));
+            return Array.from(regionSet).sort();
+        }
+
+        function createRegionButtons() {
+            const container = document.getElementById('regionButtons');
+            if (!container) return;
+            
+            container.innerHTML = '<button class="region-btn active" data-region="all">Barchasi</button>';
+            
+            regions.forEach(region => {
+                const btn = document.createElement('button');
+                btn.className = 'region-btn';
+                btn.dataset.region = region;
+                btn.textContent = region;
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.region-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentFilter = region;
+                    filterLands();
+                });
+                container.appendChild(btn);
+            });
+        }
+
+        async function loadLands() {
+            const container = document.getElementById('landsList');
+            container.innerHTML = '<div class="loading">⏳ Yerlar yuklanmoqda...</div>';
+            
+            try {
+                allLands = await getLands();
+                console.log('Loaded lands:', allLands);
+                
+                if (!allLands || allLands.length === 0) {
+                    container.innerHTML = '<div class="no-lands">😔 Hozircha yer mavjud emas</div>';
+                    return;
+                }
+                
+                regions = extractRegions(allLands);
+                createRegionButtons();
+                filterLands();
+                
+            } catch (error) {
+                console.error('Load error:', error);
+                container.innerHTML = `
+                    <div class="error">
+                        ❌ Yerlarni yuklashda xatolik!<br>
+                        <small>${error.message}</small><br><br>
+                        <button onclick="loadLands()" class="refresh-btn">🔄 Qayta urunish</button>
+                    </div>
+                `;
+            }
+        }
+
+        function filterLands() {
+            if (currentFilter === 'all') {
+                displayLands(allLands);
+            } else {
+                const filtered = allLands.filter(land => land.location === currentFilter);
+                displayLands(filtered);
+            }
+        }
+
+        function displayLands(lands) {
+            const container = document.getElementById('landsList');
+            
+            if (lands.length === 0) {
+                container.innerHTML = '<div class="no-lands">😔 Hech qanday yer topilmadi</div>';
+                return;
+            }
+            
+            container.innerHTML = lands.map(land => `
+                <div class="land-card ${selectedLand?.id === land.id ? 'selected' : ''}" onclick="selectLand(${land.id})">
+                    <div class="land-image">
+                        <div class="land-icon">🌾</div>
+                        <div class="land-badge">Ijara uchun</div>
+                    </div>
+                    <div class="land-info">
+                        <div class="land-location">📍 ${land.location}</div>
+                        <div class="land-address">🏠 ${land.address}</div>
+                        <div class="land-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Maydon</div>
+                                <div class="detail-value">${land.area} ga</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Muddati</div>
+                                <div class="detail-value">${land.duration}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Tuproq</div>
+                                <div class="detail-value">${land.soil_type}</div>
+                            </div>
+                        </div>
+                        <div class="land-price">💰 ${land.price_per_hectare.toLocaleString()} so'm/gektar</div>
+                        <div class="select-hint">👆 Yerni tanlang va so'rov yuboring</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectLand(landId) {
+            selectedLand = allLands.find(l => l.id === landId);
+            displayLands(allLands);
+            showRequestModal();
+        }
+
+        function showRequestModal() {
+            if (!selectedLand) return;
+            
+            const modal = document.getElementById('requestModal');
+            const infoDiv = document.getElementById('selectedLandInfo');
+            
+            infoDiv.innerHTML = `
+                <strong>📍 ${selectedLand.location}</strong><br>
+                🏠 ${selectedLand.address}<br>
+                🌾 Maydon: ${selectedLand.area} gektar<br>
+                💰 Narx: ${selectedLand.price_per_hectare.toLocaleString()} so'm/gektar<br>
+                👤 Egasi: ${selectedLand.owner}<br>
+                📞 Tel: ${selectedLand.owner_phone}
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeRequestModal() {
+            document.getElementById('requestModal').style.display = 'none';
+        }
+
+        async function submitLandRequest(event) {
+            event.preventDefault();
+            
+            if (!selectedLand) {
+                alert('Iltimos, avval yerni tanlang!');
+                return;
+            }
+            
+            const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+            
+            const requestData = {
+                landId: selectedLand.id,
+                landLocation: selectedLand.location,
+                landAddress: selectedLand.address,
+                landArea: selectedLand.area,
+                landOwner: selectedLand.owner,
+                landOwnerPhone: selectedLand.owner_phone,
+                price_per_hectare: selectedLand.price_per_hectare,
+                farmerName: document.getElementById('fullName').value,
+                farmerPhone: document.getElementById('phoneNumber').value,
+                farmerId: user.id || null,
+                additionalInfo: document.getElementById('additionalInfo').value
+            };
+            
+            if (!requestData.farmerName || !requestData.farmerPhone) {
+                alert('Iltimos, ism va telefon raqamni to\'ldiring!');
+                return;
+            }
+            
+            const result = await sendLandRequest(requestData);
+            if (result.success) {
+                showToast('✅ Sorov muvaffaqiyatli yuborildi!');
+                closeRequestModal();
+                document.getElementById('landRequestForm').reset();
+                selectedLand = null;
+                displayLands(allLands);
+            } else {
+                showToast('❌ Xatolik yuz berdi');
+            }
+        }
+
+        // ============ SAHIFA YUKLANGANDA ============
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Sahifa yuklandi');
+            loadLands();
+            updateAuthUI();
+            
+            const form = document.getElementById('landRequestForm');
+            if (form) {
+                form.addEventListener('submit', submitLandRequest);
+            }
+            
+            window.onclick = function(event) {
+                const modal = document.getElementById('requestModal');
+                const loginModal = document.getElementById('loginModal');
+                if (event.target === modal) closeRequestModal();
+                if (event.target === loginModal) closeLoginModal();
+            };
+        });
+    </script>
+</body>
+</html>
