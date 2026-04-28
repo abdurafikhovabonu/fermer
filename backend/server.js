@@ -1,15 +1,13 @@
 const express = require('express');
-const cors = require('cors');
+const cors = require('cors');  // FAQAT BIR MARTA!
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-// CORS sozlamalari
-const cors = require('cors');
-
+// CORS sozlamalari - FAQAT BIR MARTA!
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -56,102 +54,11 @@ app.get('/', (req, res) => {
             orders: '/api/orders',
             lands: '/api/lands',
             landRequests: '/api/land-requests',
-            stats: '/api/stats'
+            stats: '/api/stats',
+            messages: '/api/messages'
         }
     });
 });
-
-// ============ ADMIN LOGIN ============
-app.post('/api/admin/login', (req, res) => {
-    console.log('POST /api/admin/login', req.body);
-    const { username, password } = req.body;
-    
-    // Admin ma'lumotlari (xavfsizlik uchun environment variable da saqlash yaxshi)
-    const ADMIN_USERNAME = 'admin';
-    const ADMIN_PASSWORD = 'fermer2024';
-    
-    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-        res.json({ 
-            success: true, 
-            admin: {
-                id: 'admin',
-                username: 'admin',
-                role: 'admin',
-                name: 'Administrator'
-            }
-        });
-    } else {
-        res.status(401).json({ error: 'Login yoki parol noto\'g\'ri' });
-    }
-});
-
-// Admin tekshiruvi (har bir so'rovda)
-const verifyAdmin = (req, res, next) => {
-    const token = req.headers['authorization'];
-    if (!token || token !== 'admin-secret-token') {
-        return res.status(403).json({ error: 'Ruxsat yo\'q' });
-    }
-    next();
-};
-// ============ XABARLAR (CONTACT MESSAGES) ============
-
-// Barcha xabarlarni olish
-app.get('/api/messages', (req, res) => {
-    console.log('GET /api/messages');
-    const messages = readData('messages.json');
-    res.json(messages);
-});
-
-// Yangi xabar yuborish
-app.post('/api/messages', (req, res) => {
-    console.log('POST /api/messages', req.body);
-    const { name, phone, message } = req.body;
-    
-    if (!name || !phone) {
-        return res.status(400).json({ error: 'Ism va telefon raqam majburiy' });
-    }
-    
-    const messages = readData('messages.json');
-    const newMessage = {
-        id: Date.now(),
-        messageNumber: `MSG-${Date.now()}`,
-        name: name,
-        phone: phone,
-        message: message || '',
-        status: 'unread', // unread, read, replied
-        createdAt: new Date().toISOString(),
-        ip: req.ip || req.connection.remoteAddress
-    };
-    
-    messages.push(newMessage);
-    writeData('messages.json', messages);
-    
-    res.json({ success: true, message: newMessage });
-});
-
-// Xabar statusini yangilash
-app.put('/api/messages/:id', (req, res) => {
-    console.log(`PUT /api/messages/${req.params.id}`, req.body);
-    const messages = readData('messages.json');
-    const index = messages.findIndex(m => m.id == req.params.id);
-    if (index !== -1) {
-        messages[index] = { ...messages[index], ...req.body };
-        writeData('messages.json', messages);
-        res.json({ success: true });
-    } else {
-        res.status(404).json({ error: 'Xabar topilmadi' });
-    }
-});
-
-// Xabarni o'chirish
-app.delete('/api/messages/:id', (req, res) => {
-    console.log(`DELETE /api/messages/${req.params.id}`);
-    let messages = readData('messages.json');
-    messages = messages.filter(m => m.id != req.params.id);
-    writeData('messages.json', messages);
-    res.json({ success: true });
-});
-
 
 // ============ FOYDALANUVCHILAR (USERS) ============
 app.get('/api/users', (req, res) => {
@@ -198,15 +105,14 @@ app.post('/api/login', (req, res) => {
     let user = users.find(u => u.phone === phone);
     
     if (!user) {
-        // Avtomatik ro'yxatdan o'tkazish (demo uchun)
         user = {
             id: Date.now(),
-            firstName: 'Demo',
+            firstName: 'Fermer',
             lastName: 'User',
             phone: phone,
             role: 'user',
             createdAt: new Date().toISOString(),
-            avatar: `https://ui-avatars.com/api/?name=Demo+User&background=2d5a27&color=fff`
+            avatar: `https://ui-avatars.com/api/?name=Fermer+User&background=2d5a27&color=fff`
         };
         users.push(user);
         writeData('users.json', users);
@@ -243,14 +149,6 @@ app.post('/api/fertilizers', (req, res) => {
     fertilizers.push(newFertilizer);
     writeData('fertilizers.json', fertilizers);
     res.json(newFertilizer);
-});
-
-app.delete('/api/fertilizers/:id', (req, res) => {
-    console.log(`DELETE /api/fertilizers/${req.params.id}`);
-    let fertilizers = readData('fertilizers.json');
-    fertilizers = fertilizers.filter(f => f.id != req.params.id);
-    writeData('fertilizers.json', fertilizers);
-    res.json({ success: true });
 });
 
 // ============ BUYURTMALAR ============
@@ -363,6 +261,58 @@ app.delete('/api/land-requests/:id', (req, res) => {
     res.json({ success: true });
 });
 
+// ============ XABARLAR (MESSAGES) ============
+app.get('/api/messages', (req, res) => {
+    console.log('GET /api/messages');
+    const messages = readData('messages.json');
+    res.json(messages);
+});
+
+app.post('/api/messages', (req, res) => {
+    console.log('POST /api/messages', req.body);
+    const { name, phone, message } = req.body;
+    
+    if (!name || !phone) {
+        return res.status(400).json({ error: 'Ism va telefon raqam majburiy' });
+    }
+    
+    const messages = readData('messages.json');
+    const newMessage = {
+        id: Date.now(),
+        messageNumber: `MSG-${Date.now()}`,
+        name: name,
+        phone: phone,
+        message: message || '',
+        status: 'unread',
+        createdAt: new Date().toISOString()
+    };
+    
+    messages.push(newMessage);
+    writeData('messages.json', messages);
+    res.json({ success: true, message: newMessage });
+});
+
+app.put('/api/messages/:id', (req, res) => {
+    console.log(`PUT /api/messages/${req.params.id}`, req.body);
+    const messages = readData('messages.json');
+    const index = messages.findIndex(m => m.id == req.params.id);
+    if (index !== -1) {
+        messages[index] = { ...messages[index], ...req.body };
+        writeData('messages.json', messages);
+        res.json({ success: true });
+    } else {
+        res.status(404).json({ error: 'Xabar topilmadi' });
+    }
+});
+
+app.delete('/api/messages/:id', (req, res) => {
+    console.log(`DELETE /api/messages/${req.params.id}`);
+    let messages = readData('messages.json');
+    messages = messages.filter(m => m.id != req.params.id);
+    writeData('messages.json', messages);
+    res.json({ success: true });
+});
+
 // ============ STATISTIKA ============
 app.get('/api/stats', (req, res) => {
     console.log('GET /api/stats');
@@ -371,31 +321,22 @@ app.get('/api/stats', (req, res) => {
     const lands = readData('lands.json');
     const requests = readData('land_requests.json');
     const fertilizers = readData('fertilizers.json');
+    const messages = readData('messages.json');
     
-    const stats = {
+    res.json({
         users: users.length,
         orders: orders.length,
         pendingOrders: orders.filter(o => o.status === 'pending').length,
         lands: lands.length,
         landRequests: requests.length,
         fertilizers: fertilizers.length,
+        messages: messages.length,
         totalIncome: orders.reduce((sum, o) => sum + (o.total || 0), 0)
-    };
-    
-    console.log('Stats:', stats);
-    res.json(stats);
+    });
 });
 
 // ============ SERVERNI ISHGA TUSHIRISH ============
 app.listen(PORT, () => {
-    console.log(`
-    ╔══════════════════════════════════════════════════╗
-    ║     🌾 FERMERLAR MAKTABI BACKEND API 🌾          ║
-    ╠══════════════════════════════════════════════════╣
-    ║  Server: http://localhost:${PORT}                  ║
-    ║  Stats:  http://localhost:${PORT}/api/stats       ║
-    ║  Users:  http://localhost:${PORT}/api/users       ║
-    ║  Orders: http://localhost:${PORT}/api/orders      ║
-    ╚══════════════════════════════════════════════════╝
-    `);
+    console.log(`✅ Server ishlayapti: https://fermer-6ta5.onrender.com`);
+    console.log(`📊 API test: https://fermer-6ta5.onrender.com/api/lands`);
 });
